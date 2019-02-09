@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">MapMarks</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="hint_search">Поиск по имени метки</string>
+    <string name="title_activity_main_screen">Map</string>
+    <string name="my_marks">Мои метки</string>
+    <string name="my_categories">Мои категории</string>
+    <string name="new_mark_activity_label">Новая метка</string>
+    <string name="add_mark_name_hint">Название метки</string>
+    <string name="add_mark_description_hint">Описание метки</string>
+    <string name="add_mark_next">Далее</string>
+    <string name="add_mark_next_button">Далее</string>
+    <string name="select_category_spinner_prompt">Категория</string>
+    <string name="add_category_activity_label">Новая категория</string>
+    <string name="add_category_name_hint">Название категории</string>
+    <string name="add_category_description_hint">Описание категории</string>
+    <string name="add_category_done_button">Готово</string>
+</resources>
