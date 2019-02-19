@@ -22,16 +22,16 @@
                   android:theme="@style/Theme.AppCompat.Light">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value="ru.itmo.se.mapmarks.MyMarksActivity"/>
+                    android:value="ru.itmo.se.mapmarks.MainScreenActivity"/>
         </activity>
         <activity
                 android:name=".AddCategoryActivity"
                 android:label="@string/add_category_activity_label"
-                android:parentActivityName=".MainScreenActivity"
+                android:parentActivityName=".AddMarkActivity"
                 android:theme="@style/Theme.AppCompat.Light">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value="ru.itmo.se.mapmarks.AddCategoryActivity"/>
+                    android:value="ru.itmo.se.mapmarks.AddMarkActivity"/>
         </activity>
         <activity
                 android:name=".AddMarkActivity"
@@ -40,7 +40,7 @@
                 android:theme="@style/Theme.AppCompat.Light">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value="ru.itmo.se.mapmarks.AddMarkActivity"/>
+                    android:value="ru.itmo.se.mapmarks.MainScreenActivity"/>
         </activity>
         <activity
                 android:name=".MainScreenActivity"
