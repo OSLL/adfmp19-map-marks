@@ -74,7 +74,7 @@ class DummyMarkInfoContainer: MarkInfoContainer {
     override fun addCategory(category: Category): CategoryOpsResultHandler {
         val categoryExists = category in categories
         if (!categoryExists) {
-            categories.add(category)
+            categories.add(0, category)
         }
         return CategoryOpsResultHandler(category, categoryExists)
     }

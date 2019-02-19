@@ -33,6 +33,7 @@ class MainScreenActivity : AppCompatActivity() {
             menuItem.isChecked = true
             when (menuItem.itemId) {
                 R.id.main_my_marks_option_menu -> startActivity(Intent(this, MyMarksActivity::class.java))
+                R.id.main_my_categories_option_menu -> startActivity(Intent(this, MyCategoriesActivity::class.java))
             }
             mDrawerLayout.closeDrawers()
             true
