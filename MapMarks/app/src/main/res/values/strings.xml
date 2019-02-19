@@ -16,4 +16,6 @@
     <string name="add_category_name_hint">Название категории</string>
     <string name="add_category_description_hint">Описание категории</string>
     <string name="add_category_done_button">Готово</string>
+    <string name="my_marks_category_tag">Категория: </string>
+    <string name="my_marks_activity_title">Мои метки</string>
 </resources>

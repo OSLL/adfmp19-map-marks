@@ -53,9 +53,8 @@ class AddMarkActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (data != null && requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
-                val newCategory = Category(data.getStringExtra("cn"), data.getStringExtra("cd"))
-                markInfoContainer.addCategory(newCategory)
-                categoriesList += newCategory.name
+                val newCategoryName = data.getStringExtra("cn")
+                categoriesList += newCategoryName
                 categoriesSpinner.adapter = getActualAdapter(categoriesList)
 
                 // Last item in adapter is actually not a category, but an option to start new activity,

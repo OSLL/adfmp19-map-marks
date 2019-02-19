@@ -2,6 +2,7 @@ package ru.itmo.se.mapmarks
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.TextInputEditText
@@ -11,6 +12,7 @@ import android.util.Log
 import android.widget.Button
 import ru.itmo.se.mapmarks.data.category.Category
 import ru.itmo.se.mapmarks.prototype.DummyMarkInfoContainer
+import kotlin.random.Random
 
 class AddCategoryActivity : AppCompatActivity() {
 
@@ -37,14 +39,13 @@ class AddCategoryActivity : AppCompatActivity() {
 
                 // TODO tbd more smart notification about successful operation (maybe another callback)
                 var addSuccessful = true
-                markInfoContainer.addCategory(Category(categoryName, categoryDescription)).ifAlreadyExists {
+                markInfoContainer.addCategory(Category(categoryName, categoryDescription, Color.argb(255, Random.nextInt(255), Random.nextInt(255), Random.nextInt(255)))).ifAlreadyExists {
                     addCategoryNameLayout.error = "Категория с таким именем уже существует"
                     addSuccessful = false
                 }
 
                 if (addSuccessful) {
                     parentActivityIntent.putExtra("cn", categoryName)
-                    parentActivityIntent.putExtra("cd", categoryDescription)
                     setResult(Activity.RESULT_OK, parentActivityIntent)
                     finish()
                 }

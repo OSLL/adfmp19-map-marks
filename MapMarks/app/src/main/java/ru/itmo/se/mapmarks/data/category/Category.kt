@@ -1,8 +1,11 @@
 package ru.itmo.se.mapmarks.data.category
 
+import android.graphics.Color
+
 class Category(
     val name: String,
-    val description: String
+    val description: String,
+    val color: Int
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

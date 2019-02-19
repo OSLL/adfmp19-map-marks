@@ -1,6 +1,5 @@
 package ru.itmo.se.mapmarks
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
@@ -10,20 +9,15 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import android.view.Gravity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
-import android.widget.LinearLayout
-import ru.itmo.se.mapmarks.data.category.Category
-import ru.itmo.se.mapmarks.data.mark.Mark
 import ru.itmo.se.mapmarks.prototype.DummyMarkInfoContainer
 
 class MainScreenActivity : AppCompatActivity() {
 
     private lateinit var mDrawerLayout: DrawerLayout
-    private val markInfoContainer = DummyMarkInfoContainer.INSTANCE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,14 +28,11 @@ class MainScreenActivity : AppCompatActivity() {
         val navigationView: NavigationView = findViewById(R.id.nav_view)
 
         navigationView.setNavigationItemSelectedListener { menuItem ->
-            // set item as selected to persist highlight
             menuItem.isChecked = true
-            // close drawer when item is tapped
+            when (menuItem.itemId) {
+                R.id.main_my_marks_option_menu -> startActivity(Intent(this, MyMarksActivity::class.java))
+            }
             mDrawerLayout.closeDrawers()
-
-            // Add code here to update the UI based on the item selected
-            // For example, swap UI fragments here
-
             true
         }
 

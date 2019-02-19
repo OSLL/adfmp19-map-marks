@@ -1,5 +1,6 @@
 package ru.itmo.se.mapmarks.prototype
 
+import android.graphics.Color
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import ru.itmo.se.mapmarks.data.category.Category
@@ -12,9 +13,9 @@ import kotlin.random.Random
 class DummyMarkInfoContainer: MarkInfoContainer {
 
     private val categories: MutableList<Category> = mutableListOf(
-        Category("Покемоны", "Pokemon Go"),
-        Category("Развлечения", "Типа жизнь"),
-        Category("Экономия", "Копим на вишневую семерку")
+        Category("Покемоны", "Pokemon Go", Color.argb(255, 190, 0, 0)),
+        Category("Развлечения", "Типа жизнь", Color.argb(255, 0, 190, 0)),
+        Category("Экономия", "Копим на вишневую семерку", Color.argb(255, 0, 0, 190))
     )
 
     private val marks: MutableList<Mark> = mutableListOf(
@@ -51,6 +52,10 @@ class DummyMarkInfoContainer: MarkInfoContainer {
         Mark("Доступный обед", "Самый доступный обед", categories[2], MarkerOptions().position(randomLatLng())),
         Mark("BUSINESS LUNCH", "Самый примитивный обед", categories[2], MarkerOptions().position(randomLatLng()))
     )
+
+    init {
+        marks.shuffle()
+    }
 
     override val allCategories: Iterable<Category>
         get() = categories.toList()
