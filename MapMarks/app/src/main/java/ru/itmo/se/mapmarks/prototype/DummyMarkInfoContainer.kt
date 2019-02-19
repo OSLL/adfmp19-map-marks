@@ -84,7 +84,7 @@ class DummyMarkInfoContainer: MarkInfoContainer {
         val markExists = mark in marks
         val markCannotBeAdded = categoryNotExists || markExists
         if (!markCannotBeAdded) {
-            marks.add(mark)
+            marks.add(0, mark)
         }
         return MarkOpsResultHandler(mark, markCannotBeAdded)
     }

@@ -1,5 +1,6 @@
 package ru.itmo.se.mapmarks
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
@@ -13,6 +14,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import ru.itmo.se.mapmarks.prototype.DummyMarkInfoContainer
 
 class MainScreenActivity : AppCompatActivity() {
@@ -46,7 +48,7 @@ class MainScreenActivity : AppCompatActivity() {
         }
 
         val addMarkButton = findViewById<FloatingActionButton>(R.id.add_mark_button_main)
-        addMarkButton.setOnClickListener(OnButtonListener())
+        addMarkButton.setOnClickListener(AddMarkButtonOnClickListener(this, requestCode = 1))
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -64,10 +66,10 @@ class MainScreenActivity : AppCompatActivity() {
         }
     }
 
-    private inner class OnButtonListener: View.OnClickListener {
-
-        override fun onClick(view: View) {
-            startActivity(Intent(this@MainScreenActivity, AddMarkActivity::class.java))
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (data != null && requestCode == 1 && resultCode == Activity.RESULT_OK) {
+            Toast.makeText(this@MainScreenActivity, "Метка добавлена", Toast.LENGTH_SHORT).show()
         }
     }
 }

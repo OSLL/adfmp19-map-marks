@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.design.widget.TextInputEditText
 import android.support.design.widget.TextInputLayout
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.*
 import ru.itmo.se.mapmarks.data.category.Category
@@ -31,18 +32,9 @@ class AddMarkActivity : AppCompatActivity() {
         val adapter = getActualAdapter(categoriesList)
         categoriesSpinner.adapter = adapter
 
-        categoriesSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(p0: AdapterView<*>) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                if (position == adapter.count - 1) {
-                    val requestCode = 1
-                    startActivityForResult(Intent(this@AddMarkActivity, AddCategoryActivity::class.java), requestCode)
-                }
-            }
-        }
+        val listener = SelectCategorySpinnerListener(this, categoriesSpinner.adapter)
+        categoriesSpinner.setOnTouchListener(listener)
+        categoriesSpinner.onItemSelectedListener = listener
 
         val nextButton = findViewById<Button>(R.id.add_mark_next_button)
         // TODO listener to go to next activity
@@ -60,6 +52,7 @@ class AddMarkActivity : AppCompatActivity() {
                 // Last item in adapter is actually not a category, but an option to start new activity,
                 // so it is needed to subtract 2 to get an appropriate position
                 categoriesSpinner.setSelection(categoriesSpinner.adapter.count - 2)
+                Toast.makeText(this@AddMarkActivity, "Категория добавлена", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -68,7 +61,7 @@ class AddMarkActivity : AppCompatActivity() {
         val adapter = ArrayAdapter(
             this,
             android.R.layout.simple_spinner_item,
-            list + listOf("Новая категория\\.\\.\\.")
+            list + listOf("Новая категория...")
         )
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         return adapter
@@ -87,7 +80,6 @@ class AddMarkActivity : AppCompatActivity() {
 
             // TODO tbd activity to define position
             if (isMarkNameNotEmpty && isMarkDescriptionNotEmpty) {
-                val parentActivityIntent = Intent()
                 val markName = addMarkNameEdit.text.toString()
                 val markDescription = addMarkDescriptionEdit.text.toString()
 
@@ -105,6 +97,7 @@ class AddMarkActivity : AppCompatActivity() {
                     }
 
                 if (addSuccessful) {
+                    setResult(Activity.RESULT_OK, parentActivityIntent)
                     finish()
                 }
             }
