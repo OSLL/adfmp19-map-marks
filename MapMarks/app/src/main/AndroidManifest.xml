@@ -16,10 +16,19 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".MyCategoriesActivity"
+        <activity android:name=".CategoryMarksActivity"
                   android:label="@string/my_categories_activity_title"
-                  android:parentActivityName=".MainScreenActivity"
+                  android:parentActivityName=".MyCategoriesActivity"
                   android:theme="@style/Theme.AppCompat.Light">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="ru.itmo.se.mapmarks.MyCategoriesActivity"/>
+        </activity>
+        <activity
+                android:name=".MyCategoriesActivity"
+                android:label="@string/my_categories_activity_title"
+                android:parentActivityName=".MainScreenActivity"
+                android:theme="@style/Theme.AppCompat.Light">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="ru.itmo.se.mapmarks.MainScreenActivity"/>

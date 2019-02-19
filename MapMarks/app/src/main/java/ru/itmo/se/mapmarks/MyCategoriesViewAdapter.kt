@@ -1,6 +1,7 @@
 package ru.itmo.se.mapmarks
 
 import android.content.Context
+import android.content.Intent
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -11,6 +12,8 @@ import ru.itmo.se.mapmarks.data.category.Category
 import ru.itmo.se.mapmarks.prototype.DummyMarkInfoContainer
 
 class MyCategoriesViewAdapter(val allCategories: List<Category>, val context: Context): RecyclerView.Adapter<MyCategoriesViewAdapter.MyCategoriesViewHolder>() {
+
+    private val markInfoContainer = DummyMarkInfoContainer.INSTANCE
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyCategoriesViewHolder {
         val categoryView = LayoutInflater.from(parent.context).inflate(R.layout.my_categories_cards, parent, false)
@@ -29,6 +32,15 @@ class MyCategoriesViewAdapter(val allCategories: List<Category>, val context: Co
     }
 
     inner class MyCategoriesViewHolder(val view: View): RecyclerView.ViewHolder(view) {
+
+        init {
+            view.setOnClickListener { view ->
+                val categoryMarksIntent = Intent(context, CategoryMarksActivity::class.java)
+                categoryMarksIntent.putExtra("cn", categoryNameView.text.toString())
+                context.startActivity(categoryMarksIntent)
+            }
+        }
+
         val categoryNameView: TextView = view.findViewById(R.id.my_categories_category_name)
         val categoryDescriptionView: TextView = view.findViewById(R.id.my_categories_category_description)
         val marksInCategoryCountView: TextView = view.findViewById(R.id.my_categories_marks_count)
