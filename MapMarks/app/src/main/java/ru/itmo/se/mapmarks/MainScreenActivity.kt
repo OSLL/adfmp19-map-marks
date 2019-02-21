@@ -2,6 +2,7 @@ package ru.itmo.se.mapmarks
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.FloatingActionButton
@@ -22,6 +23,8 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.Marker
 import ru.itmo.se.mapmarks.data.mark.Mark
 import ru.itmo.se.mapmarks.data.mark.addMarker
@@ -106,7 +109,7 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
         map.setOnMarkerClickListener(this)
 
         markInfoContainer.allMarks.forEach {
-            map.addMarker(it.options).tag = it
+            map.addMarker(it.options.icon(getMarkerIcon(it.category.color))).tag = it
         }
 
         markInfoContainer.allMarks.first().let { map.moveCamera(CameraUpdateFactory.newLatLng(it.options.position)) }
@@ -138,6 +141,12 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
     override fun onClick(view: View) {
         Log.d("jrioejiovreijifeirgrtgrt", view.transitionName)
         markInfoSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+    }
+
+    private fun getMarkerIcon(color: Int): BitmapDescriptor {
+        val hsv = FloatArray(3)
+        Color.colorToHSV(color, hsv)
+        return BitmapDescriptorFactory.defaultMarker(hsv[0])
     }
 }
 
