@@ -20,4 +20,7 @@
     <string name="my_marks_activity_title">Мои метки</string>
     <string name="my_categories_activity_title">Мои категории</string>
     <string name="my_categories_count_tag">Количество меток:</string>
+    <string name="mark_info_information_icon">Информация</string>
+    <string name="mark_info_description_tag">Описание</string>
+    <string name="mark_info_location_tag">Местоположение</string>
 </resources>

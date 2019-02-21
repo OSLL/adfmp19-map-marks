@@ -3,6 +3,7 @@ package ru.itmo.se.mapmarks
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.BottomSheetBehavior
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -14,16 +15,51 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.Marker
+import ru.itmo.se.mapmarks.data.mark.Mark
+import ru.itmo.se.mapmarks.data.mark.addMarker
 import ru.itmo.se.mapmarks.prototype.DummyMarkInfoContainer
+import ru.itmo.se.mapmarks.prototype.LocationConverter
+import kotlin.random.Random
 
-class MainScreenActivity : AppCompatActivity() {
+class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener, View.OnClickListener {
 
     private lateinit var mDrawerLayout: DrawerLayout
+    private lateinit var map: GoogleMap
+    private lateinit var markInfoSheetLayout: LinearLayout
+    private lateinit var markInfoSheetBehavior: BottomSheetBehavior<LinearLayout>
+
+    private val markInfoContainer = DummyMarkInfoContainer.INSTANCE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_screen)
+
+        val toolbar = findViewById<Toolbar>(R.id.main_menu_toolbar)
+        setSupportActionBar(toolbar)
+
+        val actionbar: ActionBar? = supportActionBar
+        actionbar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setHomeAsUpIndicator(android.R.drawable.ic_menu_camera)
+        }
+
+        markInfoSheetLayout = findViewById(R.id.mark_info_sheet)
+        markInfoSheetBehavior = BottomSheetBehavior.from(markInfoSheetLayout)
+
+
+        val addMarkButton = findViewById<FloatingActionButton>(R.id.add_mark_button_main)
+        addMarkButton.setOnClickListener(AddMarkButtonOnClickListener(this, requestCode = 1))
+
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.main_screen_map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
 
         mDrawerLayout = findViewById(R.id.drawer_layout)
 
@@ -38,18 +74,6 @@ class MainScreenActivity : AppCompatActivity() {
             mDrawerLayout.closeDrawers()
             true
         }
-
-        val toolbar = findViewById<Toolbar>(R.id.main_menu_toolbar)
-        setSupportActionBar(toolbar)
-
-        val actionbar: ActionBar? = supportActionBar
-        actionbar?.apply {
-            setDisplayHomeAsUpEnabled(true)
-            setHomeAsUpIndicator(android.R.drawable.ic_menu_camera)
-        }
-
-        val addMarkButton = findViewById<FloatingActionButton>(R.id.add_mark_button_main)
-        addMarkButton.setOnClickListener(AddMarkButtonOnClickListener(this, requestCode = 1))
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -72,6 +96,48 @@ class MainScreenActivity : AppCompatActivity() {
         if (data != null && requestCode == 1 && resultCode == Activity.RESULT_OK) {
             Toast.makeText(this@MainScreenActivity, "Метка добавлена", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        map = googleMap
+
+        map.uiSettings.isZoomControlsEnabled = true
+        map.setPadding(0, 0, 0, 150)
+        map.setOnMarkerClickListener(this)
+
+        markInfoContainer.allMarks.forEach {
+            map.addMarker(it.options).tag = it
+        }
+
+        markInfoContainer.allMarks.first().let { map.moveCamera(CameraUpdateFactory.newLatLng(it.options.position)) }
+    }
+
+    override fun onMarkerClick(marker: Marker): Boolean {
+        val mark = marker.tag as Mark
+
+        val markNameView = markInfoSheetLayout.findViewById<TextView>(R.id.mark_info_mark_name)
+        val markCategoryNameView = markInfoSheetLayout.findViewById<TextView>(R.id.mark_info_mark_category)
+        val markDescriptionView = markInfoSheetLayout.findViewById<TextView>(R.id.mark_info_mark_description)
+        val markCoordinatesView = markInfoSheetLayout.findViewById<TextView>(R.id.mark_info_mark_coordinates)
+        val markLocationPlaceView = markInfoSheetLayout.findViewById<TextView>(R.id.mark_info_mark_location_place)
+        val markDistanceView = markInfoSheetLayout.findViewById<TextView>(R.id.mark_info_mark_distance)
+
+        markNameView.setTextColor(mark.category.color)
+        markNameView.text = mark.name
+        markCategoryNameView.text = mark.category.name
+        markDescriptionView.text = mark.description
+        markCoordinatesView.text = mark.options.position.let { LocationConverter.convert(it.latitude, it.longitude) }
+        markLocationPlaceView.text = "Пенза, РФ"
+
+        markDistanceView.text = "${Random.nextInt(12000)}км от Вас"
+
+        markInfoSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        return true
+    }
+
+    override fun onClick(view: View) {
+        Log.d("jrioejiovreijifeirgrtgrt", view.transitionName)
+        markInfoSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 }
 

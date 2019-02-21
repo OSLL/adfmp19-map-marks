@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical"
               android:layout_width="match_parent"
@@ -28,6 +28,15 @@
                     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                     app:layout_constraintTop_toTopOf="parent"/>
 
+            <fragment
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/main_screen_map"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/main_menu_toolbar"/>
+
             <android.support.design.widget.FloatingActionButton
                     android:id="@+id/add_mark_button_main"
                     android:layout_width="wrap_content"
@@ -52,4 +61,6 @@
 
     </android.support.v4.widget.DrawerLayout>
 
-</LinearLayout>
+    <include layout="@layout/mark_info_sheet_layout"/>
+
+</android.support.design.widget.CoordinatorLayout>

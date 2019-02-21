@@ -6,4 +6,5 @@
     <color name="colorAccent">#D81B60</color>
     <color name="myMarksTextColor">#FFFFFF</color>
     <color name="categoryMarksTextColor">#FFFFFF</color>
+    <color name="markInfoTextColor">#000000</color>
 </resources>
