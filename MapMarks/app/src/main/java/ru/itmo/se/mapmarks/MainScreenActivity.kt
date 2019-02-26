@@ -25,10 +25,9 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptor
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.*
 import ru.itmo.se.mapmarks.data.mark.Mark
+import ru.itmo.se.mapmarks.location.LocationProvider
 import ru.itmo.se.mapmarks.prototype.DummyMarkInfoContainer
 import ru.itmo.se.mapmarks.prototype.LocationConverter
 import kotlin.random.Random
@@ -41,6 +40,8 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
     private lateinit var markInfoSheetLayout: LinearLayout
 
     private val markInfoContainer = DummyMarkInfoContainer.INSTANCE
+
+    private var currentLocation: LatLng? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -129,11 +130,22 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
             map.addMarker(it.options.icon(getMarkerIcon(it.category.color))).tag = it
         }
 
-        markInfoContainer.allMarks.first().let { map.moveCamera(CameraUpdateFactory.newLatLng(it.options.position)) }
+        // TODO tbd move current location marker, not adding new one
+        if (currentLocation == null) {
+            currentLocation = LocationProvider.from(this)
+        }
+
+        if (currentLocation != null) {
+            map.addMarker(MarkerOptions().position(currentLocation!!).icon(getMarkerIcon(Color.YELLOW)))
+            map.moveCamera(CameraUpdateFactory.newLatLng(currentLocation))
+        } else {
+            markInfoContainer.allMarks.first()
+                .let { map.moveCamera(CameraUpdateFactory.newLatLng(it.options.position)) }
+        }
     }
 
     override fun onMarkerClick(marker: Marker): Boolean {
-        val mark = marker.tag as Mark
+        val mark = marker.tag as? Mark ?: return true
 
         val markNameView = markInfoSheetLayout.findViewById<TextView>(R.id.mark_info_mark_name)
         val markCategoryNameView = markInfoSheetLayout.findViewById<TextView>(R.id.mark_info_mark_category)
