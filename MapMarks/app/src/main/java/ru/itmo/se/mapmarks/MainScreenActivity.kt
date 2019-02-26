@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
+import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -16,6 +17,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -26,24 +28,35 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.Marker
+import kotlinx.android.synthetic.main.activity_main_screen.*
 import ru.itmo.se.mapmarks.data.mark.Mark
 import ru.itmo.se.mapmarks.data.mark.addMarker
 import ru.itmo.se.mapmarks.prototype.DummyMarkInfoContainer
 import ru.itmo.se.mapmarks.prototype.LocationConverter
 import kotlin.random.Random
 
-class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener, View.OnClickListener {
+class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private lateinit var mDrawerLayout: DrawerLayout
     private lateinit var map: GoogleMap
+    private lateinit var mainView: CoordinatorLayout
     private lateinit var markInfoSheetLayout: LinearLayout
-    private lateinit var markInfoSheetBehavior: BottomSheetBehavior<LinearLayout>
 
     private val markInfoContainer = DummyMarkInfoContainer.INSTANCE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_screen)
+
+        markInfoSheetLayout = findViewById(R.id.mark_info_sheet)
+        markInfoSheetLayout.visibility = View.INVISIBLE
+
+        mainView = findViewById<CoordinatorLayout>(R.id.main_layout)
+
+        mainView.setOnClickListener { view ->
+                Log.d("IOEO#IOEFIORM#IOCMORV", "remmeorevtrv")
+                markInfoSheetLayout.visibility = View.INVISIBLE
+        }
 
         val toolbar = findViewById<Toolbar>(R.id.main_menu_toolbar)
         setSupportActionBar(toolbar)
@@ -53,10 +66,6 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(android.R.drawable.ic_menu_camera)
         }
-
-        markInfoSheetLayout = findViewById(R.id.mark_info_sheet)
-        markInfoSheetBehavior = BottomSheetBehavior.from(markInfoSheetLayout)
-
 
         val addMarkButton = findViewById<FloatingActionButton>(R.id.add_mark_button_main)
         addMarkButton.setOnClickListener(AddMarkButtonOnClickListener(this, requestCode = 1))
@@ -134,13 +143,15 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
 
         markDistanceView.text = "${Random.nextInt(12000)}км от Вас"
 
-        markInfoSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-        return true
-    }
+        val slideUp = AnimationUtils.loadAnimation(applicationContext, R.anim.slide_up)
 
-    override fun onClick(view: View) {
-        Log.d("jrioejiovreijifeirgrtgrt", view.transitionName)
-        markInfoSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        @SuppressWarnings("unused")
+        val slideDown = AnimationUtils.loadAnimation(applicationContext, R.anim.slide_down)
+
+        markInfoSheetLayout.animation = slideUp
+        markInfoSheetLayout.visibility = View.VISIBLE
+
+        return true
     }
 
     private fun getMarkerIcon(color: Int): BitmapDescriptor {

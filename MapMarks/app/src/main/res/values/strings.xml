@@ -23,4 +23,7 @@
     <string name="mark_info_information_icon">Информация</string>
     <string name="mark_info_description_tag">Описание</string>
     <string name="mark_info_location_tag">Местоположение</string>
+    <string name="mark_info_route_button_text">Маршрут</string>
+    <string name="mark_info_edit_button_text">Редактировать</string>
+    <string name="mark_info_share_button_text">Поделиться</string>
 </resources>
