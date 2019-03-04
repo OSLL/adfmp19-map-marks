@@ -5,17 +5,17 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MyMarksActivity">
+        tools:context=".myElementsActivity.MyMarksActivity">
 
     <android.support.v7.widget.RecyclerView
-            android:id="@+id/my_marks_recycler_view"
+            android:id="@+id/myRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:scrollbars="vertical" />
+            android:scrollbars="vertical"/>
 
     <android.support.design.widget.FloatingActionButton
-            android:id="@+id/add_mark_button_my_marks"
+            android:id="@+id/addButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@android:drawable/ic_input_add"

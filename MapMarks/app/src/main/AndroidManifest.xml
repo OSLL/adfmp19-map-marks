@@ -19,14 +19,14 @@
             tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".CategoryMarksActivity"
                   android:label="@string/my_categories_activity_title"
-                  android:parentActivityName=".MyCategoriesActivity"
+                  android:parentActivityName=".myElementsActivity.MyCategoriesActivity"
                   android:theme="@style/Theme.AppCompat.Light">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value="ru.itmo.se.mapmarks.MyCategoriesActivity"/>
+                    android:value="ru.itmo.se.mapmarks.myElementsActivity.MyCategoriesActivity"/>
         </activity>
         <activity
-                android:name=".MyCategoriesActivity"
+                android:name=".myElementsActivity.MyCategoriesActivity"
                 android:label="@string/my_categories_activity_title"
                 android:parentActivityName=".MainScreenActivity"
                 android:theme="@style/Theme.AppCompat.Light">
@@ -35,7 +35,7 @@
                     android:value="ru.itmo.se.mapmarks.MainScreenActivity"/>
         </activity>
         <activity
-                android:name=".MyMarksActivity"
+                android:name=".myElementsActivity.MyMarksActivity"
                 android:label="@string/my_marks_activity_title"
                 android:parentActivityName=".MainScreenActivity"
                 android:theme="@style/Theme.AppCompat.Light">

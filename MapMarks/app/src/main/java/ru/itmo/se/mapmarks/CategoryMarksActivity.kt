@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.widget.Toast
+import ru.itmo.se.mapmarks.adapters.CategoryMarksViewAdapter
 import ru.itmo.se.mapmarks.data.category.Category
 import ru.itmo.se.mapmarks.prototype.DummyMarkInfoContainer
 
@@ -41,5 +42,8 @@ class CategoryMarksActivity : AppCompatActivity() {
         }
     }
 
-    private fun actualAdapter(context: Context) = CategoryMarksViewAdapter(markInfoContainer.getMarksForCategory(category).toList(), context)
+    private fun actualAdapter(context: Context) = CategoryMarksViewAdapter(
+        markInfoContainer.getMarksForCategory(category).toList(),
+        context
+    )
 }

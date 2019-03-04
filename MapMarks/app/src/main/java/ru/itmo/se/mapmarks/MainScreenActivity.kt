@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity
 import android.view.*
 import android.view.animation.AnimationUtils
 import android.widget.Toast
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -20,6 +19,8 @@ import ru.itmo.se.mapmarks.data.mark.Mark
 import ru.itmo.se.mapmarks.location.LocationProvider
 import ru.itmo.se.mapmarks.prototype.DummyMarkInfoContainer
 import kotlinx.android.synthetic.main.mark_info_sheet_layout.*
+import ru.itmo.se.mapmarks.myElementsActivity.MyCategoriesActivity
+import ru.itmo.se.mapmarks.myElementsActivity.MyMarksActivity
 import ru.itmo.se.mapmarks.prototype.LocationConverter
 import kotlin.random.Random
 

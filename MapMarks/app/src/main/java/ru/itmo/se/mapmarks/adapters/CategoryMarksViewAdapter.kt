@@ -1,4 +1,4 @@
-package ru.itmo.se.mapmarks
+package ru.itmo.se.mapmarks.adapters
 
 import android.content.Context
 import android.support.v7.widget.CardView
@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import ru.itmo.se.mapmarks.R
 import ru.itmo.se.mapmarks.data.mark.Mark
 import kotlin.random.Random
 
