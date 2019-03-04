@@ -44,16 +44,16 @@
                     android:value="ru.itmo.se.mapmarks.MainScreenActivity"/>
         </activity>
         <activity
-                android:name=".AddCategoryActivity"
+                android:name=".addElementActivity.AddCategoryActivity"
                 android:label="@string/add_category_activity_label"
-                android:parentActivityName=".AddMarkActivity"
+                android:parentActivityName=".addElementActivity.AddMarkActivity"
                 android:theme="@style/Theme.AppCompat.Light">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value="ru.itmo.se.mapmarks.AddMarkActivity"/>
+                    android:value="ru.itmo.se.mapmarks.addElementActivity.AddMarkActivity"/>
         </activity>
         <activity
-                android:name=".AddMarkActivity"
+                android:name=".addElementActivity.AddMarkActivity"
                 android:label="@string/new_mark_activity_label"
                 android:parentActivityName=".MainScreenActivity"
                 android:theme="@style/Theme.AppCompat.Light">

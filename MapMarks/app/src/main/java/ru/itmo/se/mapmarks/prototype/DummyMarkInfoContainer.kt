@@ -5,9 +5,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import ru.itmo.se.mapmarks.data.category.Category
 import ru.itmo.se.mapmarks.data.mark.Mark
-import ru.itmo.se.mapmarks.data.storage.CategoryOpsResultHandler
 import ru.itmo.se.mapmarks.data.storage.MarkInfoContainer
-import ru.itmo.se.mapmarks.data.storage.MarkOpsResultHandler
+import java.io.IOException
 import kotlin.random.Random
 
 class DummyMarkInfoContainer: MarkInfoContainer {
@@ -71,22 +70,23 @@ class DummyMarkInfoContainer: MarkInfoContainer {
 
     override fun getMarksForCategory(category: Category): Iterable<Mark> = marks.filter { it.category == category }
 
-    override fun addCategory(category: Category): CategoryOpsResultHandler {
-        val categoryExists = category in categories
-        if (!categoryExists) {
+    override fun addCategory(category: Category): Boolean {
+        if (!containsCategory(category)) {
             categories.add(0, category)
+            return true
         }
-        return CategoryOpsResultHandler(category, categoryExists)
+        throw IOException("Категория с таким именем уже существует")
     }
 
-    override fun addMark(mark: Mark): MarkOpsResultHandler {
+    override fun addMark(mark: Mark): Boolean {
         val categoryNotExists = mark.category !in categories
         val markExists = mark in marks
         val markCannotBeAdded = categoryNotExists || markExists
         if (!markCannotBeAdded) {
             marks.add(0, mark)
+            return true
         }
-        return MarkOpsResultHandler(mark, markCannotBeAdded)
+        throw IOException("Метка с таким именем уже существует")
     }
 
     override fun containsCategory(categoryName: String) = categories.find { it.name == categoryName } != null
@@ -97,22 +97,24 @@ class DummyMarkInfoContainer: MarkInfoContainer {
 
     override fun containsMark(mark: Mark) = mark in marks
 
-    override fun updateCategory(category: Category): CategoryOpsResultHandler {
+    override fun updateCategory(category: Category): Boolean {
         val categoryIndex = categories.indexOf(category)
         val categoryDoesNotExist = categoryIndex == -1
         if (!categoryDoesNotExist) {
             categories[categoryIndex] = category
+            return true
         }
-        return CategoryOpsResultHandler(category, categoryDoesNotExist)
+        throw IOException("Категория с таким именем уже существует")
     }
 
-    override fun updateMark(mark: Mark): MarkOpsResultHandler {
+    override fun updateMark(mark: Mark): Boolean {
         val markIndex = marks.indexOf(mark)
         val markDoesNotExists = markIndex == -1
         if (!markDoesNotExists) {
             marks[markIndex] = mark
+            return true
         }
-        return MarkOpsResultHandler(mark = mark, needCallback = markDoesNotExists)
+        throw IOException("Категория с таким именем уже существует")
     }
 
     companion object {

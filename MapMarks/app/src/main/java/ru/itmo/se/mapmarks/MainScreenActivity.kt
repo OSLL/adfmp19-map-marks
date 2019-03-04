@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.*
 import android.view.animation.AnimationUtils
 import android.widget.Toast
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -96,7 +97,7 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
         }
 
 
-        //TODO what are doing this code?
+//        //TODO what are doing this code?
 //        if (currentLocation != null) {
 //            map.addMarker(MarkerOptions().position(currentLocation!!).icon(getMarkerIcon(Color.YELLOW)))
 //            map.moveCamera(CameraUpdateFactory.newLatLng(currentLocation))

@@ -2,13 +2,11 @@ package ru.itmo.se.mapmarks
 
 import android.app.Activity
 import android.content.Intent
-import android.support.v4.app.ActivityCompat.startActivityForResult
-import android.util.Log
 import android.widget.AdapterView
 import android.view.MotionEvent
 import android.view.View
-import android.view.View.OnTouchListener
 import android.widget.Adapter
+import ru.itmo.se.mapmarks.addElementActivity.AddCategoryActivity
 
 
 class SelectCategorySpinnerListener(val activity: Activity, val adapter: Adapter) : AdapterView.OnItemSelectedListener, View.OnTouchListener {
