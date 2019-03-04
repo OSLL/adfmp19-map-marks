@@ -54,6 +54,15 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
             drawerLayout.closeDrawers()
             true
         }
+
+        shareButton.setOnClickListener {
+            val sharingIntent = Intent(Intent.ACTION_SEND)
+            sharingIntent.type = "text/plain"
+            val shareBody = "Share body"
+            sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here")
+            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody)
+            startActivity(Intent.createChooser(sharingIntent, "Share via"));
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
