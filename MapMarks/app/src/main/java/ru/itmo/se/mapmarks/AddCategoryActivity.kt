@@ -8,9 +8,7 @@ import android.os.Bundle
 import android.support.design.widget.TextInputEditText
 import android.support.design.widget.TextInputLayout
 import android.text.TextUtils
-import android.util.Log
 import android.widget.Button
-import android.widget.Toast
 import ru.itmo.se.mapmarks.data.category.Category
 import ru.itmo.se.mapmarks.prototype.DummyMarkInfoContainer
 import kotlin.random.Random

@@ -1,7 +1,5 @@
 package ru.itmo.se.mapmarks.data.category
 
-import android.graphics.Color
-
 class Category(
     val name: String,
     val description: String,

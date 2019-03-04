@@ -1,11 +1,7 @@
 package ru.itmo.se.mapmarks.location
 
 import android.app.Activity
-import android.util.Log
 import com.google.android.gms.maps.model.LatLng
-import android.widget.Toast
-
-
 
 class LocationProvider {
     companion object {
