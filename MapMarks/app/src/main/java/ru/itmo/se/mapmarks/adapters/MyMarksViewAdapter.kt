@@ -12,7 +12,7 @@ import ru.itmo.se.mapmarks.data.mark.Mark
 import kotlin.random.Random
 
 class MyMarksViewAdapter(allElements: List<Mark>, context: Context) :
-    MyElementsAdapter<MyMarksViewAdapter.MyMarksViewHolder, Mark>(allElements, context) {
+    MyElementsViewAdapter<MyMarksViewAdapter.MyMarksViewHolder, Mark>(allElements, context) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyMarksViewHolder {
         val markView = LayoutInflater.from(parent.context).inflate(R.layout.my_marks_cards, parent, false)
@@ -29,7 +29,6 @@ class MyMarksViewAdapter(allElements: List<Mark>, context: Context) :
 
         // TODO real location
         holder.markLocationDescriptionView.text = "${Random.nextInt(12000)} км от Вас"
-
         holder.view.findViewById<CardView>(R.id.my_marks_card_view).setCardBackgroundColor(currentMark.category.color)
     }
 

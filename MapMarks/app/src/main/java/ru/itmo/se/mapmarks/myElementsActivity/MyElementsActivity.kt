@@ -11,11 +11,12 @@ import android.support.v7.widget.RecyclerView
 import android.widget.Toast
 import ru.itmo.se.mapmarks.R
 import kotlinx.android.synthetic.main.activity_my_elements.*
-import ru.itmo.se.mapmarks.adapters.MyElementsAdapter
+import ru.itmo.se.mapmarks.adapters.MyElementsViewAdapter
 
 @SuppressLint("Registered")
 abstract class MyElementsActivity<T : RecyclerView.ViewHolder, B>(private val addSuccessMessage: String) :
     AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_elements)
@@ -35,5 +36,5 @@ abstract class MyElementsActivity<T : RecyclerView.ViewHolder, B>(private val ad
 
     abstract protected fun addButtonListener()
 
-    abstract protected fun actualAdapter(context: Context): MyElementsAdapter<T, B>
+    abstract protected fun actualAdapter(context: Context): MyElementsViewAdapter<T, B>
 }

@@ -26,19 +26,3 @@ interface MarkInfoContainer {
 
     fun getCategoryByName(categoryName: String): Category
 }
-
-//class MarkOpsResultHandler(private val mark: Mark, private val needCallback: Boolean) {
-//    fun ifCategoryNotExists(action: (Mark) -> Unit): MarkOpsResultHandler {
-//        if (needCallback) {
-//            action(mark)
-//        }
-//        return this
-//    }
-//
-//    fun ifMarkAlreadyExists(action: (Mark) -> Unit): MarkOpsResultHandler {
-//        if (needCallback) {
-//            action(mark)
-//        }
-//        return this
-//    }
-//}
