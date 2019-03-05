@@ -66,6 +66,6 @@ open class ListMarkInfoContainer : MarkInfoContainer {
             marks[markIndex] = mark
             return true
         }
-        throw IOException("Категория с таким именем уже существует")
+        throw IOException("Метка с таким именем уже существует")
     }
 }

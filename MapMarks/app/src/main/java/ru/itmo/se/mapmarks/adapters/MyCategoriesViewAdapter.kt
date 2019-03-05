@@ -21,8 +21,6 @@ class MyCategoriesViewAdapter(allElements: List<Category>, context: Context) :
         return MyCategoriesViewHolder(categoryView)
     }
 
-    override fun getItemCount() = allElements.size
-
     override fun onBindViewHolder(holder: MyCategoriesViewHolder, position: Int) {
         val currentCategory = allElements[position]
         holder.categoryNameView.text = currentCategory.name
