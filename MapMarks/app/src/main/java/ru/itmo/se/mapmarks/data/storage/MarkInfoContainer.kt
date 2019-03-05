@@ -12,8 +12,8 @@ interface MarkInfoContainer {
 
     fun getMarksForCategory(category: Category): Iterable<Mark>
 
-    fun addCategory(category: Category): CategoryOpsResultHandler
-    fun addMark(mark: Mark): MarkOpsResultHandler
+    fun addCategory(category: Category): Boolean
+    fun addMark(mark: Mark): Boolean
 
     fun containsCategory(categoryName: String): Boolean
     fun containsCategory(category: Category): Boolean
@@ -21,32 +21,8 @@ interface MarkInfoContainer {
     fun containsMark(markName: String): Boolean
     fun containsMark(mark: Mark): Boolean
 
-    fun updateCategory(category: Category): CategoryOpsResultHandler
-    fun updateMark(mark: Mark): MarkOpsResultHandler
+    fun updateCategory(category: Category): Boolean
+    fun updateMark(mark: Mark): Boolean
 
     fun getCategoryByName(categoryName: String): Category
-}
-
-class CategoryOpsResultHandler(private val category: Category, private val needCallback: Boolean) {
-    fun ifAlreadyExists(action: (Category) -> Unit): CategoryOpsResultHandler {
-        if (needCallback) {
-            action(category)
-        }
-        return this
-    }
-}
-
-class MarkOpsResultHandler(private val mark: Mark, private val needCallback: Boolean) {
-    fun ifCategoryNotExists(action: (Mark) -> Unit): MarkOpsResultHandler {
-        if (needCallback) {
-            action(mark)
-        }
-        return this
-    }
-    fun ifMarkAlreadyExists(action: (Mark) -> Unit): MarkOpsResultHandler {
-        if (needCallback) {
-            action(mark)
-        }
-        return this
-    }
 }

@@ -17,16 +17,8 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".CategoryMarksActivity"
-                  android:label="@string/my_categories_activity_title"
-                  android:parentActivityName=".MyCategoriesActivity"
-                  android:theme="@style/Theme.AppCompat.Light">
-            <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value="ru.itmo.se.mapmarks.MyCategoriesActivity"/>
-        </activity>
         <activity
-                android:name=".MyCategoriesActivity"
+                android:name=".myElementsActivity.MyCategoriesActivity"
                 android:label="@string/my_categories_activity_title"
                 android:parentActivityName=".MainScreenActivity"
                 android:theme="@style/Theme.AppCompat.Light">
@@ -35,7 +27,7 @@
                     android:value="ru.itmo.se.mapmarks.MainScreenActivity"/>
         </activity>
         <activity
-                android:name=".MyMarksActivity"
+                android:name=".myElementsActivity.MyMarksActivity"
                 android:label="@string/my_marks_activity_title"
                 android:parentActivityName=".MainScreenActivity"
                 android:theme="@style/Theme.AppCompat.Light">
@@ -44,16 +36,16 @@
                     android:value="ru.itmo.se.mapmarks.MainScreenActivity"/>
         </activity>
         <activity
-                android:name=".AddCategoryActivity"
+                android:name=".addElementActivity.AddCategoryActivity"
                 android:label="@string/add_category_activity_label"
-                android:parentActivityName=".AddMarkActivity"
+                android:parentActivityName=".addElementActivity.AddMarkActivity"
                 android:theme="@style/Theme.AppCompat.Light">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value="ru.itmo.se.mapmarks.AddMarkActivity"/>
-        </activity>
+                    android:value="ru.itmo.se.mapmarks.addElementActivity.AddMarkActivity"/>
+        </activity>CategoryMarksActivity
         <activity
-                android:name=".AddMarkActivity"
+                android:name=".addElementActivity.AddMarkActivity"
                 android:label="@string/new_mark_activity_label"
                 android:parentActivityName=".MainScreenActivity"
                 android:theme="@style/Theme.AppCompat.Light">
