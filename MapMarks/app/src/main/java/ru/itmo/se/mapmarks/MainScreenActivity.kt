@@ -23,6 +23,9 @@ import ru.itmo.se.mapmarks.myElementsActivity.MyCategoriesActivity
 import ru.itmo.se.mapmarks.myElementsActivity.MyMarksActivity
 import ru.itmo.se.mapmarks.prototype.LocationConverter
 import kotlin.random.Random
+import android.view.ViewGroup
+
+
 
 class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private lateinit var markInfoPopup: MarkInfoPopup
@@ -150,12 +153,23 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
 
         fun showPopup() {
             layout.animation = AnimationUtils.loadAnimation(applicationContext, R.anim.slide_up)
+            setEnable(mark_info_sheet, true)
             layout.visibility = View.VISIBLE
         }
 
         fun hidePopup() {
             layout.animation = AnimationUtils.loadAnimation(applicationContext, R.anim.slide_down)
+            setEnable(mark_info_sheet, false)
             layout.visibility = View.INVISIBLE
+        }
+
+        private fun setEnable(v: View, enabled: Boolean) {
+            if (v is ViewGroup) {
+                for (i in 0 until v.childCount) {
+                    setEnable(v.getChildAt(i), enabled)
+                }
+            }
+            v.isEnabled = enabled
         }
     }
 }
