@@ -9,7 +9,6 @@ import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SearchView
-import android.util.Log
 import android.view.*
 import android.view.animation.AnimationUtils
 import android.widget.AdapterView
@@ -76,7 +75,6 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        Log.d("DEBUG", "enter")
         menuInflater.inflate(R.menu.main_screen_menu_search, menu)
         val searchView = menu.findItem(R.id.mainScreenSearch).actionView as SearchView
         val searchAutoComplete =
