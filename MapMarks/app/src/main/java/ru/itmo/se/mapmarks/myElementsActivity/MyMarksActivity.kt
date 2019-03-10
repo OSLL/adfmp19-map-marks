@@ -3,8 +3,9 @@ package ru.itmo.se.mapmarks.myElementsActivity
 import android.content.Context
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_my_elements.*
-import ru.itmo.se.mapmarks.AddMarkButtonOnClickListener
+import ru.itmo.se.mapmarks.StartActivityForResultListener
 import ru.itmo.se.mapmarks.adapters.MyMarksViewAdapter
+import ru.itmo.se.mapmarks.addElementActivity.AddMarkActivity
 import ru.itmo.se.mapmarks.data.mark.Mark
 import ru.itmo.se.mapmarks.prototype.DummyMarkInfoContainer
 
@@ -23,7 +24,9 @@ class MyMarksActivity : MyElementsActivity<MyMarksViewAdapter.MyMarksViewHolder,
     }
 
     override fun addButtonListener() {
-        addButton.setOnClickListener(AddMarkButtonOnClickListener(this, 1))
+        addButton.setOnClickListener {
+            StartActivityForResultListener(this, AddMarkActivity::class.java, 1)
+        }
     }
 
     override fun actualAdapter(context: Context) =
