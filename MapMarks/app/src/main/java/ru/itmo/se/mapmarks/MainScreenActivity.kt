@@ -161,7 +161,6 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
     private fun initFilter() {
         categoryName = intent.getStringExtra("categoryName")
         if (categoryName != null) {
-            Log.d("DEBUG", "click")
             val category = markInfoContainer.getCategoryByName(categoryName!!)
             markList = markList.filter { it.category.name == categoryName }
             removeCategoryButton.visibility = View.VISIBLE
