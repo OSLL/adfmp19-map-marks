@@ -1,8 +1,11 @@
 package ru.itmo.se.mapmarks
 
+import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.location.Location
 import android.os.Bundle
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBar
@@ -16,7 +19,6 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import kotlinx.android.synthetic.main.activity_main_screen.*
 import ru.itmo.se.mapmarks.data.mark.Mark
-import ru.itmo.se.mapmarks.location.LocationProvider
 import ru.itmo.se.mapmarks.prototype.DummyMarkInfoContainer
 import kotlinx.android.synthetic.main.mark_info_sheet_layout.*
 import ru.itmo.se.mapmarks.myElementsActivity.MyCategoriesActivity
@@ -24,13 +26,26 @@ import ru.itmo.se.mapmarks.myElementsActivity.MyMarksActivity
 import ru.itmo.se.mapmarks.prototype.LocationConverter
 import kotlin.random.Random
 import android.view.ViewGroup
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.LatLng
+import android.location.LocationManager
+import android.content.Context.LOCATION_SERVICE
+import android.content.pm.PackageManager
+import android.location.LocationListener
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat.getSystemService
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.CameraPosition
 
 
 
-class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener, LocationListener {
     private lateinit var markInfoPopup: MarkInfoPopup
     private val markInfoContainer = DummyMarkInfoContainer.INSTANCE
     private var currentLocation: LatLng? = null
+    private lateinit var map: GoogleMap
+    private lateinit var locationManager: LocationManager
+    private var currentLocationMarker: Marker? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +72,8 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
             drawerLayout.closeDrawers()
             true
         }
+
+        requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
 
         shareButton.setOnClickListener {
             val sharingIntent = Intent(Intent.ACTION_SEND)
@@ -91,7 +108,7 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
-        val map = googleMap
+        map = googleMap
         map.uiSettings.isZoomControlsEnabled = true
         map.setPadding(0, 0, 0, 150)
         map.setOnMarkerClickListener(this)
@@ -104,20 +121,7 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
             map.addMarker(it.options.icon(getMarkerIcon(it.category.color))).tag = it
         }
 
-        // TODO tbd move current location marker, not adding new one
-        if (currentLocation == null) {
-            currentLocation = LocationProvider.from(this)
-        }
-
-
-//        //TODO what are doing this code?
-//        if (currentLocation != null) {
-//            map.addMarker(MarkerOptions().position(currentLocation!!).icon(getMarkerIcon(Color.YELLOW)))
-//            map.moveCamera(CameraUpdateFactory.newLatLng(currentLocation))
-//        } else {
-//            markInfoContainer.allMarks.first()
-//                .let { map.moveCamera(CameraUpdateFactory.newLatLng(it.options.position)) }
-//        }
+//        getLocation()
     }
 
     override fun onMarkerClick(marker: Marker): Boolean {
@@ -125,6 +129,42 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
         markInfoPopup.fillMarkInfo(mark)
         markInfoPopup.showPopup()
         return true
+    }
+
+    override fun onLocationChanged(location: Location) {
+        currentLocationMarker?.remove()
+        val latLng = LatLng(location.latitude, location.longitude)
+        currentLocationMarker = map.addMarker(MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)))
+        val position = CameraPosition.Builder().target(latLng).zoom(17f).bearing(19f).tilt(30f).build()
+        map.animateCamera(CameraUpdateFactory.newCameraPosition(position))
+    }
+
+    override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {
+    }
+
+    override fun onProviderEnabled(p0: String?) {
+    }
+
+    override fun onProviderDisabled(p0: String?) {
+    }
+
+    fun getLocation() {
+        try {
+            locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5f, this)
+        } catch (e: SecurityException) {
+            e.printStackTrace()
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            1 -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getLocation()
+                }
+            }
+        }
     }
 
     private fun getMarkerIcon(color: Int): BitmapDescriptor {

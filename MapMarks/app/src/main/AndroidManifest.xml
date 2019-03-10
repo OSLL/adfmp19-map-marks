@@ -17,6 +17,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             tools:ignore="GoogleAppIndexingWarning">
+        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
         <activity
                 android:name=".myElementsActivity.MyCategoriesActivity"
                 android:label="@string/my_categories_activity_title"
@@ -43,7 +44,7 @@
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="ru.itmo.se.mapmarks.addElementActivity.AddMarkActivity"/>
-        </activity>CategoryMarksActivity
+        </activity>
         <activity
                 android:name=".addElementActivity.AddMarkActivity"
                 android:label="@string/new_mark_activity_label"
