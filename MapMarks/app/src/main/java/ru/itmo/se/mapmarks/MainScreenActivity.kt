@@ -7,8 +7,11 @@ import android.os.Bundle
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.SearchView
+import android.util.Log
 import android.view.*
 import android.view.animation.AnimationUtils
+import android.widget.AdapterView
 import android.widget.Toast
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -23,11 +26,14 @@ import ru.itmo.se.mapmarks.myElementsActivity.MyCategoriesActivity
 import ru.itmo.se.mapmarks.myElementsActivity.MyMarksActivity
 import ru.itmo.se.mapmarks.prototype.LocationConverter
 import kotlin.random.Random
+import android.widget.ArrayAdapter
+import com.google.android.gms.maps.CameraUpdateFactory
 
 class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private lateinit var markInfoPopup: MarkInfoPopup
     private val markInfoContainer = DummyMarkInfoContainer.INSTANCE
     private var currentLocation: LatLng? = null
+    private lateinit var map: GoogleMap
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,6 +73,18 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_screen_menu_search, menu)
+        val searchView = menu.findItem(R.id.mainScreenSearch).actionView as SearchView
+        val searchAutoComplete =
+            searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text) as SearchView.SearchAutoComplete
+        val adapter = ArrayAdapter(
+            this, android.R.layout.simple_list_item_1, markInfoContainer.allMarks as List
+        )
+        searchAutoComplete.setAdapter(adapter)
+        searchAutoComplete.onItemClickListener =
+            AdapterView.OnItemClickListener { parent, _, position, _ ->
+                val mark = parent?.getItemAtPosition(position) as Mark
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(mark.options.position, 14F))
+            }
         return true
     }
 
@@ -88,7 +106,7 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
-        val map = googleMap
+        map = googleMap
         map.uiSettings.isZoomControlsEnabled = true
         map.setPadding(0, 0, 0, 150)
         map.setOnMarkerClickListener(this)
