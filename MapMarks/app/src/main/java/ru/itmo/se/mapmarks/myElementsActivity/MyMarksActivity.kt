@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import kotlinx.android.synthetic.main.activity_my_elements.*
 import ru.itmo.se.mapmarks.MainScreenActivity
@@ -33,9 +34,9 @@ class MyMarksActivity : MyElementsActivity<MyMarksViewAdapter.MyMarksViewHolder,
     }
 
     override fun addButtonListener() {
-        addButton.setOnClickListener {
+        addButton.setOnClickListener(
             StartActivityForResultListener(this, AddMarkActivity::class.java, 1)
-        }
+        )
     }
 
     override fun actualAdapter(context: Context) = MyMarksViewAdapter(marksList, context)
