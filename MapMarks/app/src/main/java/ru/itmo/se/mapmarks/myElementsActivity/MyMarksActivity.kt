@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import kotlinx.android.synthetic.main.activity_my_elements.*
 import ru.itmo.se.mapmarks.MainScreenActivity
@@ -25,6 +24,7 @@ class MyMarksActivity : MyElementsActivity<MyMarksViewAdapter.MyMarksViewHolder,
         val categoryName = intent.getStringExtra("name")
         if (categoryName != null) {
             marksList = marksList.filter { it.category.name == categoryName }.toList()
+            setTitle(categoryName)
         }
         super.onCreate(savedInstanceState)
         if (categoryName != null) {
