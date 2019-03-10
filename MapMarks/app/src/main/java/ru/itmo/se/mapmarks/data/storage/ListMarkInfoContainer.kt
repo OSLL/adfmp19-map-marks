@@ -19,6 +19,9 @@ open class ListMarkInfoContainer : MarkInfoContainer {
     override fun getCategoryByName(categoryName: String): Category {
         return allCategories.first { it.name == categoryName }
     }
+    override fun getMarkByName(markName: String): Mark {
+        return allMarks.first { it.name ==  markName}
+    }
 
     override fun getMarksForCategory(category: Category): Iterable<Mark> = marks.filter { it.category == category }
 

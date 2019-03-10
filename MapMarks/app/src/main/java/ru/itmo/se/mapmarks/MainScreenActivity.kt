@@ -28,12 +28,14 @@ import ru.itmo.se.mapmarks.prototype.LocationConverter
 import kotlin.random.Random
 import android.widget.ArrayAdapter
 import com.google.android.gms.maps.CameraUpdateFactory
+import ru.itmo.se.mapmarks.addElementActivity.AddMarkActivity
 
 class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private lateinit var markInfoPopup: MarkInfoPopup
     private val markInfoContainer = DummyMarkInfoContainer.INSTANCE
     private var currentLocation: LatLng? = null
     private lateinit var map: GoogleMap
+    private lateinit var marksAdapter: ArrayAdapter<Mark>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +50,7 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
             setHomeAsUpIndicator(android.R.drawable.ic_menu_camera)
         }
 
-        addMarkButtonMain.setOnClickListener(AddMarkButtonOnClickListener(this, 1))
+        addMarkButtonMain.setOnClickListener(StartActivityForResultListener(this, AddMarkActivity::class.java, 1))
         (mainScreenMap as SupportMapFragment).getMapAsync(this)
 
         navView.setNavigationItemSelectedListener { menuItem ->
@@ -72,14 +74,15 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        Log.d("DEBUG", "enter")
         menuInflater.inflate(R.menu.main_screen_menu_search, menu)
         val searchView = menu.findItem(R.id.mainScreenSearch).actionView as SearchView
         val searchAutoComplete =
             searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text) as SearchView.SearchAutoComplete
-        val adapter = ArrayAdapter(
+        marksAdapter = ArrayAdapter(
             this, android.R.layout.simple_list_item_1, markInfoContainer.allMarks as List
         )
-        searchAutoComplete.setAdapter(adapter)
+        searchAutoComplete.setAdapter(marksAdapter)
         searchAutoComplete.onItemClickListener =
             AdapterView.OnItemClickListener { parent, _, position, _ ->
                 val mark = parent?.getItemAtPosition(position) as Mark
@@ -102,6 +105,10 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
         super.onActivityResult(requestCode, resultCode, data)
         if (data != null && requestCode == 1 && resultCode == Activity.RESULT_OK) {
             Toast.makeText(this@MainScreenActivity, "Метка добавлена", Toast.LENGTH_SHORT).show()
+            val name = data.getStringExtra("name")
+            val newMark = markInfoContainer.getMarkByName(name)
+            marksAdapter.add(newMark)
+            map.addMarker(newMark.options.icon(getMarkerIcon(newMark.category.color))).tag = newMark
         }
     }
 
