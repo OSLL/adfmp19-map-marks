@@ -33,7 +33,7 @@ class AddMarkActivity : AddElementActivity() {
     }
 
     override fun addElementAction(name: String, description: String) {
-        val newMark = DummyMarkInfoContainer.newMarkWithRandomLocation(
+        val newMark = DummyMarkInfoContainer.newPointMarkWithRandomLocation(
             name,
             description,
             markInfoContainer.getCategoryByName(categoriesList[addSelectSpinner.selectedItemPosition])
