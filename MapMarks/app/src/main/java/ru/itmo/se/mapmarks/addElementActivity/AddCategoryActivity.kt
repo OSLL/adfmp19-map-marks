@@ -3,6 +3,7 @@ package ru.itmo.se.mapmarks.addElementActivity
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import com.google.android.gms.maps.model.LatLng
 import ru.itmo.se.mapmarks.data.category.Category
 import kotlin.random.Random
 import kotlinx.android.synthetic.main.activity_add_element.*
@@ -19,7 +20,7 @@ class AddCategoryActivity : AddElementActivity() {
         )
     }
 
-    override fun addElementAction(name: String, description: String) {
+    override fun addElementAction(name: String, description: String, position: LatLng?) {
         val newCategory = Category(
             name,
             description,

@@ -16,18 +16,19 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import kotlinx.android.synthetic.main.activity_main_screen.*
 import ru.itmo.se.mapmarks.data.mark.Mark
-import ru.itmo.se.mapmarks.location.LocationProvider
 import ru.itmo.se.mapmarks.prototype.DummyMarkInfoContainer
 import kotlinx.android.synthetic.main.mark_info_sheet_layout.*
 import ru.itmo.se.mapmarks.myElementsActivity.MyCategoriesActivity
 import ru.itmo.se.mapmarks.myElementsActivity.MyMarksActivity
 import ru.itmo.se.mapmarks.prototype.LocationConverter
 import kotlin.random.Random
+import android.view.ViewGroup
+import ru.itmo.se.mapmarks.map.MapWithCurrentLocation
 
 class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private lateinit var markInfoPopup: MarkInfoPopup
     private val markInfoContainer = DummyMarkInfoContainer.INSTANCE
-    private var currentLocation: LatLng? = null
+    private lateinit var map: MapWithCurrentLocation
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,39 +83,27 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (data != null && requestCode == 1 && resultCode == Activity.RESULT_OK) {
-            Toast.makeText(this@MainScreenActivity, "Метка добавлена", Toast.LENGTH_SHORT).show()
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode in arrayOf(1, 2)) {
+                Toast.makeText(this@MainScreenActivity, "Метка добавлена", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
-        val map = googleMap
-        map.uiSettings.isZoomControlsEnabled = true
-        map.setPadding(0, 0, 0, 150)
-        map.setOnMarkerClickListener(this)
-        map.setOnMapClickListener {
+        googleMap.uiSettings.isZoomControlsEnabled = true
+        googleMap.setPadding(0, 0, 0, 150)
+        googleMap.setOnMarkerClickListener(this)
+        googleMap.setOnMapClickListener {
             markInfoPopup.hidePopup()
         }
 
-        //TODO show minimal size bounding box which including all marks
+        // TODO show minimal size bounding box which including all marks
         markInfoContainer.allMarks.forEach {
-            map.addMarker(it.options.icon(getMarkerIcon(it.category.color))).tag = it
+            googleMap.addMarker(it.options.icon(getMarkerIcon(it.category.color))).tag = it
         }
 
-        // TODO tbd move current location marker, not adding new one
-        if (currentLocation == null) {
-            currentLocation = LocationProvider.from(this)
-        }
-
-
-//        //TODO what are doing this code?
-//        if (currentLocation != null) {
-//            map.addMarker(MarkerOptions().position(currentLocation!!).icon(getMarkerIcon(Color.YELLOW)))
-//            map.moveCamera(CameraUpdateFactory.newLatLng(currentLocation))
-//        } else {
-//            markInfoContainer.allMarks.first()
-//                .let { map.moveCamera(CameraUpdateFactory.newLatLng(it.options.position)) }
-//        }
+        map = MapWithCurrentLocation(googleMap, this)
     }
 
     override fun onMarkerClick(marker: Marker): Boolean {
@@ -122,6 +111,10 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
         markInfoPopup.fillMarkInfo(mark)
         markInfoPopup.showPopup()
         return true
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        map.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun getMarkerIcon(color: Int): BitmapDescriptor {
@@ -150,12 +143,29 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
 
         fun showPopup() {
             layout.animation = AnimationUtils.loadAnimation(applicationContext, R.anim.slide_up)
+            setEnable(mark_info_sheet, true)
             layout.visibility = View.VISIBLE
+            editButton.setOnClickListener(AddMarkButtonOnClickListener(
+                this@MainScreenActivity,
+                requestCode = 1,
+                edit = true,
+                markNameToEdit = markName.text.toString())
+            )
         }
 
         fun hidePopup() {
             layout.animation = AnimationUtils.loadAnimation(applicationContext, R.anim.slide_down)
+            setEnable(mark_info_sheet, false)
             layout.visibility = View.INVISIBLE
+        }
+
+        private fun setEnable(v: View, enabled: Boolean) {
+            if (v is ViewGroup) {
+                for (i in 0 until v.childCount) {
+                    setEnable(v.getChildAt(i), enabled)
+                }
+            }
+            v.isEnabled = enabled
         }
     }
 }
