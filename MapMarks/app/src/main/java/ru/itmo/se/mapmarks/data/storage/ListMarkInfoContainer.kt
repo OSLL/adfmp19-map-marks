@@ -1,5 +1,6 @@
 package ru.itmo.se.mapmarks.data.storage
 
+import android.util.Log
 import ru.itmo.se.mapmarks.data.category.Category
 import ru.itmo.se.mapmarks.data.mark.Mark
 import java.io.IOException
@@ -16,8 +17,10 @@ open class ListMarkInfoContainer : MarkInfoContainer {
 
     override fun getCategoryOfMark(markData: Mark) = marks.find { it == markData }?.category
 
-    override fun getCategoryByName(categoryName: String): Category {
-        return allCategories.first { it.name == categoryName }
+    override fun getCategoryByName(categoryName: String): Category = allCategories.first { it.name == categoryName }
+
+    override fun getMarkByName(markName: String): Mark {
+        return allMarks.first { it.name == markName }
     }
 
     override fun getMarksForCategory(category: Category): Iterable<Mark> = marks.filter { it.category == category }
@@ -59,13 +62,13 @@ open class ListMarkInfoContainer : MarkInfoContainer {
         throw IOException("Категория с таким именем уже существует")
     }
 
-    override fun updateMark(mark: Mark): Boolean {
-        val markIndex = marks.indexOf(mark)
+    override fun updateMark(oldMark: Mark, newMark: Mark): Boolean {
+        val markIndex = marks.indexOf(oldMark)
         val markDoesNotExists = markIndex == -1
         if (!markDoesNotExists) {
-            marks[markIndex] = mark
+            marks[markIndex] = newMark
             return true
         }
-        throw IOException("Метка с таким именем уже существует")
+        return false
     }
 }

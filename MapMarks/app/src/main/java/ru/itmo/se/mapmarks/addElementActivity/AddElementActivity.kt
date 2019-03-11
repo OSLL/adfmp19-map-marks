@@ -19,12 +19,16 @@ import java.io.IOException
 @SuppressLint("Registered")
 abstract class AddElementActivity : AppCompatActivity() {
     protected val markInfoContainer = DummyMarkInfoContainer.INSTANCE
+    protected var inEditMode: Boolean = false
 
     abstract fun addElementAction(name: String, description: String, position: LatLng? = null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_element)
+        if (intent.hasExtra("edit")) {
+            inEditMode = intent.getBooleanExtra("edit", false)
+        }
     }
 
     protected inner class OnNextButtonClickListener(

@@ -22,7 +22,8 @@ interface MarkInfoContainer {
     fun containsMark(mark: Mark): Boolean
 
     fun updateCategory(category: Category): Boolean
-    fun updateMark(mark: Mark): Boolean
+    fun updateMark(oldMark: Mark, newMark: Mark): Boolean
 
     fun getCategoryByName(categoryName: String): Category
+    fun getMarkByName(markName: String): Mark
 }

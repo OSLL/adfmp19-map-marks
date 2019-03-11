@@ -145,6 +145,12 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
             layout.animation = AnimationUtils.loadAnimation(applicationContext, R.anim.slide_up)
             setEnable(mark_info_sheet, true)
             layout.visibility = View.VISIBLE
+            editButton.setOnClickListener(AddMarkButtonOnClickListener(
+                this@MainScreenActivity,
+                requestCode = 1,
+                edit = true,
+                markNameToEdit = markName.text.toString())
+            )
         }
 
         fun hidePopup() {

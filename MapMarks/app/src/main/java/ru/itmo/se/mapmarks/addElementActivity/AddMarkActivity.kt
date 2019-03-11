@@ -9,13 +9,21 @@ import com.google.android.gms.maps.model.LatLng
 import ru.itmo.se.mapmarks.prototype.DummyMarkInfoContainer
 import kotlinx.android.synthetic.main.activity_add_element.*
 import ru.itmo.se.mapmarks.SelectCategorySpinnerListener
+import ru.itmo.se.mapmarks.data.mark.Mark
 
 class AddMarkActivity : AddElementActivity() {
     private val categoriesList = mutableListOf<String>()
+    private lateinit var markToEdit: Mark
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (inEditMode) {
+            markToEdit = markInfoContainer.getMarkByName(intent.getStringExtra("name"))
 
+            title = "Редактирование метки"
+            addName.setText(markToEdit.name)
+            addDescription.setText(markToEdit.description)
+        }
         // There is the only assignment to categoriesSpinner
         categoriesList += markInfoContainer.allCategories.map { it.name }
 
@@ -41,7 +49,12 @@ class AddMarkActivity : AddElementActivity() {
             description,
             markInfoContainer.getCategoryByName(categoriesList[addSelectSpinner.selectedItemPosition])
         )
-        markInfoContainer.addMark(newMark)
+        if (inEditMode) {
+            val markToEdit = markInfoContainer.getMarkByName(intent.getStringExtra("name"))
+            markInfoContainer.updateMark(markToEdit, newMark)
+        } else {
+            markInfoContainer.addMark(newMark)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
