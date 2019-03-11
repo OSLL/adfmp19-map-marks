@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.*
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import ru.itmo.se.mapmarks.prototype.DummyMarkInfoContainer
 import kotlinx.android.synthetic.main.activity_add_element.*
 import ru.itmo.se.mapmarks.SelectCategorySpinnerListener
@@ -44,11 +45,13 @@ class AddMarkActivity : AddElementActivity() {
     }
 
     override fun addElementAction(name: String, description: String, position: LatLng?) {
-        val newMark = DummyMarkInfoContainer.newMarkWithRandomLocation(
+        val newMark = Mark(
             name,
             description,
-            markInfoContainer.getCategoryByName(categoriesList[addSelectSpinner.selectedItemPosition])
+            markInfoContainer.getCategoryByName(categoriesList[addSelectSpinner.selectedItemPosition]),
+            MarkerOptions().position(position!!)
         )
+
         if (inEditMode) {
             val markToEdit = markInfoContainer.getMarkByName(intent.getStringExtra("name"))
             markInfoContainer.updateMark(markToEdit, newMark)
