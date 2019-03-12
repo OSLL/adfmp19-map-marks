@@ -3,7 +3,6 @@ package ru.itmo.se.mapmarks
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBar
@@ -16,7 +15,6 @@ import android.widget.Toast
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.*
 import kotlinx.android.synthetic.main.activity_main_screen.*
 import ru.itmo.se.mapmarks.data.mark.Mark
 import ru.itmo.se.mapmarks.location.LocationProvider
@@ -29,8 +27,10 @@ import kotlin.random.Random
 import android.widget.ArrayAdapter
 import com.google.android.gms.maps.CameraUpdateFactory
 import ru.itmo.se.mapmarks.addElementActivity.AddMarkActivity
+import com.google.android.gms.maps.model.LatLng
 
-class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
+
     private lateinit var markInfoPopup: MarkInfoPopup
     private val markInfoContainer = DummyMarkInfoContainer.INSTANCE
     private var currentLocation: LatLng? = null
@@ -84,7 +84,8 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
         searchAutoComplete.onItemClickListener =
             AdapterView.OnItemClickListener { parent, _, position, _ ->
                 val mark = parent?.getItemAtPosition(position) as Mark
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(mark.options.position, 14F))
+                val cameraUpdate = CameraUpdateFactory.newLatLngBounds(mark.getBound(), 25, 25, 5)
+                map.animateCamera(cameraUpdate)
             }
         return true
     }
@@ -105,9 +106,9 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
             Toast.makeText(this@MainScreenActivity, "Метка добавлена", Toast.LENGTH_SHORT).show()
             val name = data.getStringExtra("name")
             val newMark = markInfoContainer.getMarkByName(name)
-            if (newMark.category.name == categoryName) {
+            if (categoryName == null || newMark.category.name == categoryName) {
                 marksAdapter.add(newMark)
-                map.addMarker(newMark.options.icon(getMarkerIcon(newMark.category.color))).tag = newMark
+                newMark.addToMap(map)
             }
         }
     }
@@ -116,43 +117,32 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
         map = googleMap
         map.uiSettings.isZoomControlsEnabled = true
         map.setPadding(0, 0, 0, 150)
-        map.setOnMarkerClickListener(this)
         map.setOnMapClickListener {
             markInfoPopup.hidePopup()
         }
 
         //TODO show minimal size bounding box which including all marks
-        markList.forEach {
-            map.addMarker(it.options.icon(getMarkerIcon(it.category.color))).tag = it
-        }
+        markList.forEach { it.addToMap(map) }
 
         // TODO tbd move current location marker, not adding new one
         if (currentLocation == null) {
             currentLocation = LocationProvider.from(this)
         }
 
-
-//        //TODO what are doing this code?
-//        if (currentLocation != null) {
-//            map.addMarker(MarkerOptions().position(currentLocation!!).icon(getMarkerIcon(Color.YELLOW)))
-//            map.moveCamera(CameraUpdateFactory.newLatLng(currentLocation))
-//        } else {
-//            markList.first()
-//                .let { map.moveCamera(CameraUpdateFactory.newLatLng(it.options.position)) }
-//        }
+        map.setOnPolygonClickListener {
+            val mark = it.tag as? Mark ?: return@setOnPolygonClickListener
+            onMarkClick(mark)
+        }
+        map.setOnMarkerClickListener {
+            val mark = it.tag as? Mark ?: return@setOnMarkerClickListener true
+            onMarkClick(mark)
+            true
+        }
     }
 
-    override fun onMarkerClick(marker: Marker): Boolean {
-        val mark = marker.tag as? Mark ?: return true
+    private fun onMarkClick(mark: Mark) {
         markInfoPopup.fillMarkInfo(mark)
         markInfoPopup.showPopup()
-        return true
-    }
-
-    private fun getMarkerIcon(color: Int): BitmapDescriptor {
-        val hsv = FloatArray(3)
-        Color.colorToHSV(color, hsv)
-        return BitmapDescriptorFactory.defaultMarker(hsv[0])
     }
 
     @SuppressLint("RestrictedApi")
@@ -169,9 +159,7 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
                 markList = markInfoContainer.allMarks.toList()
                 removeCategoryButton.visibility = View.INVISIBLE
 
-                markList.forEach {
-                    map.addMarker(it.options.icon(getMarkerIcon(it.category.color))).tag = it
-                }
+                markList.forEach { it.addToMap(map) }
                 marksAdapter.addAll(markList)
             }
         }
@@ -190,7 +178,7 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
             markName.text = mark.name
             markCategory.text = mark.category.name
             markInfoDescription.text = mark.description
-            markInfoLocation.text = mark.options.position.let { LocationConverter.convert(it.latitude, it.longitude) }
+            markInfoLocation.text = LocationConverter.convert(mark.getPosition().latitude, mark.getPosition().longitude)
             markInfoPlace.text = "Пенза, РФ"
             markInfoDistance.text = "${Random.nextInt(12000)}км от Вас"
         }
