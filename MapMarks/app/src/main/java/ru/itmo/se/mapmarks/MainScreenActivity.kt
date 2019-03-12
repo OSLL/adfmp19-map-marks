@@ -106,8 +106,9 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
             Toast.makeText(this@MainScreenActivity, "Метка добавлена", Toast.LENGTH_SHORT).show()
             val name = data.getStringExtra("name")
             val newMark = markInfoContainer.getMarkByName(name)
-            if (newMark.category.name == categoryName) {
+            if (categoryName == null || newMark.category.name == categoryName) {
                 marksAdapter.add(newMark)
+                newMark.addToMap(map)
             }
         }
     }
