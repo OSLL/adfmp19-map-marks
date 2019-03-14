@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.activity_add_mark.*
 import ru.itmo.se.mapmarks.R
 import ru.itmo.se.mapmarks.SelectCategorySpinnerListener
 import ru.itmo.se.mapmarks.data.mark.Mark
+import ru.itmo.se.mapmarks.data.resources.RequestCodes
 import java.io.IOException
 
 abstract class ManipulateMarkActivity: ManipulateElementActivity() {
@@ -36,7 +37,7 @@ abstract class ManipulateMarkActivity: ManipulateElementActivity() {
     override fun propagateToNextActivity(name: String, description: String) {
         val selectMarkPositionIntent = Intent(this, SelectMarkPositionActivity::class.java)
         selectMarkPositionIntent.putExtra("name", name).putExtra("description", description)
-        startActivityForResult(selectMarkPositionIntent, 2)
+        startActivityForResult(selectMarkPositionIntent, RequestCodes.MARK_SELECT_POSITION)
     }
 
     override fun doNext() {
@@ -54,18 +55,18 @@ abstract class ManipulateMarkActivity: ManipulateElementActivity() {
         if (data != null) {
             if (resultCode == Activity.RESULT_OK) {
                 when (requestCode) {
-                    1 -> {
+                    RequestCodes.MARK_ADD_NEW_CATEGORY -> {
                         val newCategoryName = data.getStringExtra("name")
                         categoriesList += newCategoryName
                         addSelectCategorySpinner.adapter = getActualAdapter(categoriesList)
 
-//                 Last item in adapter is actually not a category, but an option to start new activity,
-//                 so it is needed to subtract 2 to get an appropriate position
+                        // Last item in adapter is actually not a category, but an option to start new activity,
+                        // so it is needed to subtract 2 to get an appropriate position
                         addSelectCategorySpinner.setSelection(addSelectCategorySpinner.adapter.count - 2)
                         Toast.makeText(this, "Категория добавлена", Toast.LENGTH_SHORT)
                             .show()
                     }
-                    2 -> {
+                    RequestCodes.MARK_SELECT_POSITION -> {
                         val name = data.getStringExtra("name")
                         val description = data.getStringExtra("description")
                         val latitude = data.getDoubleExtra("lat", -1.0)

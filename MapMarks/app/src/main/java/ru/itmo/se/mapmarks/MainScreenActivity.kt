@@ -23,6 +23,7 @@ import ru.itmo.se.mapmarks.myElementsActivity.MyMarksActivity
 import ru.itmo.se.mapmarks.prototype.LocationConverter
 import kotlin.random.Random
 import android.view.ViewGroup
+import ru.itmo.se.mapmarks.data.resources.RequestCodes
 import ru.itmo.se.mapmarks.map.MapWithCurrentLocation
 
 class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
@@ -43,7 +44,7 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
             setHomeAsUpIndicator(android.R.drawable.ic_menu_camera)
         }
 
-        addMarkButtonMain.setOnClickListener(AddMarkButtonOnClickListener(this, 1))
+        addMarkButtonMain.setOnClickListener(AddMarkButtonOnClickListener(this, RequestCodes.MAIN_ADD_MARK))
         (mainScreenMap as SupportMapFragment).getMapAsync(this)
 
         navView.setNavigationItemSelectedListener { menuItem ->
@@ -84,7 +85,7 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode in arrayOf(1, 2)) {
+            if (requestCode == RequestCodes.MAIN_ADD_MARK) {
                 Toast.makeText(this@MainScreenActivity, "Метка добавлена", Toast.LENGTH_SHORT).show()
             }
         }
@@ -147,7 +148,7 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
             layout.visibility = View.VISIBLE
             editButton.setOnClickListener(EditMarkButtonOnClickListener(
                 this@MainScreenActivity,
-                requestCode = 1,
+                requestCode = RequestCodes.MAIN_EDIT_MARK,
                 markNameToEdit = markName.text.toString())
             )
         }

@@ -7,13 +7,12 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.Adapter
 import ru.itmo.se.mapmarks.addElementActivity.AddCategoryActivity
+import ru.itmo.se.mapmarks.data.resources.RequestCodes
 
 
 class SelectCategorySpinnerListener(val activity: Activity, val adapter: Adapter) : AdapterView.OnItemSelectedListener, View.OnTouchListener {
 
-    override fun onNothingSelected(p0: AdapterView<*>?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun onNothingSelected(p0: AdapterView<*>?) {}
 
     private var userSelect = false
 
@@ -25,8 +24,7 @@ class SelectCategorySpinnerListener(val activity: Activity, val adapter: Adapter
     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         if (userSelect) {
             if (position == adapter.count - 1) {
-                val requestCode = 1
-                activity.startActivityForResult(Intent(activity, AddCategoryActivity::class.java), requestCode)
+                activity.startActivityForResult(Intent(activity, AddCategoryActivity::class.java), RequestCodes.MARK_ADD_NEW_CATEGORY)
             }
             userSelect = false
         }
