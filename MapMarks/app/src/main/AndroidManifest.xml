@@ -43,7 +43,7 @@
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="ru.itmo.se.mapmarks.addElementActivity.AddMarkActivity"/>
-        </activity>CategoryMarksActivity
+        </activity>
         <activity
                 android:name=".addElementActivity.AddMarkActivity"
                 android:label="@string/new_mark_activity_label"
