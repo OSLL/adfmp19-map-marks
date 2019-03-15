@@ -24,6 +24,7 @@ class MyMarksActivity : MyElementsActivity<MyMarksViewAdapter.MyMarksViewHolder,
         val categoryName = intent.getStringExtra("name")
         if (categoryName != null) {
             marksList = marksList.filter { it.category.name == categoryName }.toList()
+            setTitle(categoryName)
         }
         super.onCreate(savedInstanceState)
         if (categoryName != null) {
