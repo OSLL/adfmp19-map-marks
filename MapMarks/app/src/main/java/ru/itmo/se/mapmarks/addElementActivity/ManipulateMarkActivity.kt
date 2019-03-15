@@ -11,11 +11,9 @@ import com.google.android.gms.maps.model.PolygonOptions
 import kotlinx.android.synthetic.main.activity_add_mark.*
 import ru.itmo.se.mapmarks.R
 import ru.itmo.se.mapmarks.SelectCategorySpinnerListener
-import ru.itmo.se.mapmarks.data.mark.Mark
 import ru.itmo.se.mapmarks.data.mark.point.PointMark
 import ru.itmo.se.mapmarks.data.mark.polygon.PolygonMark
 import ru.itmo.se.mapmarks.data.resources.RequestCodes
-import java.io.IOException
 
 abstract class ManipulateMarkActivity : ManipulateElementActivity() {
 
@@ -53,10 +51,10 @@ abstract class ManipulateMarkActivity : ManipulateElementActivity() {
     override fun doNext() {
         val name = addMarkName.text.toString()
         val description = addMarkDescription.text.toString()
-        try {
+        if (!markInfoContainer.containsMark(name)) {
             propagateToNextActivity(name, description)
-        } catch (e: IOException) {
-            addMarkNameLayout.error = e.message
+        } else {
+            addMarkNameLayout.error = "Метка с таким именем уже существует"
         }
     }
 
