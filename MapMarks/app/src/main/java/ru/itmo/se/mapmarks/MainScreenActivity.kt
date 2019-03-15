@@ -2,12 +2,14 @@ package ru.itmo.se.mapmarks
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SearchView
+import android.util.Log
 import android.view.*
 import android.view.animation.AnimationUtils
 import android.widget.AdapterView
@@ -28,6 +30,7 @@ import ru.itmo.se.mapmarks.data.resources.RequestCodes
 import ru.itmo.se.mapmarks.map.MapWithCurrentLocation
 import android.widget.ArrayAdapter
 import com.google.android.gms.maps.CameraUpdateFactory
+import ru.itmo.se.mapmarks.data.storage.GsonContainerWriter
 
 class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var markInfoPopup: MarkInfoPopup
@@ -71,6 +74,14 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
             sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here")
             sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody)
             startActivity(Intent.createChooser(sharingIntent, "Share via"));
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        val serializedContainerData = markInfoContainer.write(GsonContainerWriter())
+        applicationContext.openFileOutput(resources.getString(R.string.savedDataFileName), Context.MODE_PRIVATE).use {
+            it.write(serializedContainerData.toByteArray())
         }
     }
 
