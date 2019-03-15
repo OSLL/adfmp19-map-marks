@@ -84,7 +84,7 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
         searchAutoComplete.onItemClickListener =
             AdapterView.OnItemClickListener { parent, _, position, _ ->
                 val mark = parent?.getItemAtPosition(position) as Mark
-                val cameraUpdate = CameraUpdateFactory.newLatLngBounds(mark.getBound(), 25, 25, 5)
+                val cameraUpdate = CameraUpdateFactory.newLatLngBounds(mark.getBound(), 10)
                 map.backedMap.animateCamera(cameraUpdate)
             }
         return true

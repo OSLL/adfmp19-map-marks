@@ -7,23 +7,32 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.PolygonOptions
 import kotlinx.android.synthetic.main.activity_add_mark.*
 import ru.itmo.se.mapmarks.R
 import ru.itmo.se.mapmarks.SelectCategorySpinnerListener
 import ru.itmo.se.mapmarks.data.mark.Mark
 import ru.itmo.se.mapmarks.data.mark.point.PointMark
+import ru.itmo.se.mapmarks.data.mark.polygon.PolygonMark
 import ru.itmo.se.mapmarks.data.resources.RequestCodes
 import java.io.IOException
 
-abstract class ManipulateMarkActivity: ManipulateElementActivity() {
+abstract class ManipulateMarkActivity : ManipulateElementActivity() {
 
-    abstract fun createAndAddMark(name: String, description: String, position: LatLng?)
+    abstract fun createAndAddMark(name: String, description: String, coordinates: ArrayList<LatLng>)
 
     protected fun createMark(name: String, description: String, position: LatLng?) = PointMark(
         name,
         description,
         markInfoContainer.getCategoryByName(categoriesList[addSelectCategorySpinner.selectedItemPosition]),
         MarkerOptions().position(position!!)
+    )
+
+    protected fun createPolygon(name: String, description: String, coordinates: ArrayList<LatLng>) = PolygonMark(
+        name,
+        description,
+        markInfoContainer.getCategoryByName(categoriesList[addSelectCategorySpinner.selectedItemPosition]),
+        PolygonOptions().addAll(coordinates)
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,9 +79,10 @@ abstract class ManipulateMarkActivity: ManipulateElementActivity() {
                     RequestCodes.MARK_SELECT_POSITION -> {
                         val name = data.getStringExtra("name")
                         val description = data.getStringExtra("description")
-                        val latitude = data.getDoubleExtra("lat", 5.0)
-                        val longitude = data.getDoubleExtra("lon", 5.0)
-                        createAndAddMark(name, description, LatLng(latitude, longitude))
+                        val coordinates = data.getSerializableExtra("coordinates") as? ArrayList<LatLng>
+                        if (coordinates != null) {
+                            createAndAddMark(name, description, coordinates)
+                        }
                         setResult(Activity.RESULT_OK, data)
                         finish()
                     }
@@ -103,7 +113,7 @@ abstract class ManipulateMarkActivity: ManipulateElementActivity() {
         addSelectCategorySpinner.onItemSelectedListener = listener
     }
 
-    private inner class ManipulateMarkInputVerifier: InputVerifier() {
+    private inner class ManipulateMarkInputVerifier : InputVerifier() {
 
         override fun verify(): Boolean {
             val isMarkNameNotEmpty =
