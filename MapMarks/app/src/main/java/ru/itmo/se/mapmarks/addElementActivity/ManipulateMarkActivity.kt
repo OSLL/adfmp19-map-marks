@@ -3,7 +3,6 @@ package ru.itmo.se.mapmarks.addElementActivity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.google.android.gms.maps.model.LatLng
@@ -11,10 +10,8 @@ import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.activity_add_mark.*
 import ru.itmo.se.mapmarks.R
 import ru.itmo.se.mapmarks.SelectCategorySpinnerListener
-import ru.itmo.se.mapmarks.data.mark.Mark
 import ru.itmo.se.mapmarks.data.mark.point.PointMark
 import ru.itmo.se.mapmarks.data.resources.RequestCodes
-import java.io.IOException
 
 abstract class ManipulateMarkActivity: ManipulateElementActivity() {
 
