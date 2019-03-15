@@ -7,6 +7,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import ru.itmo.se.mapmarks.data.mark.Mark
+import java.lang.Math.rint
 
 fun setViewColor(view: View, color: Int) {
     view.backgroundTintList =
@@ -30,5 +31,5 @@ fun getDistance(latLng1: LatLng, latLng2: LatLng): Double {
             * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2)
             * Math.sin(dLon / 2))
     val c = 2 * Math.asin(Math.sqrt(a))
-    return radius * c
+    return rint(100.0 * radius * c) / 100.0
 }

@@ -163,6 +163,10 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        map.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
     private inner class MarkInfoPopup {
         private val layout = mark_info_sheet
         private lateinit var selectMark: Mark

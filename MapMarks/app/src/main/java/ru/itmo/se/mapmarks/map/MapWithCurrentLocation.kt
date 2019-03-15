@@ -27,7 +27,6 @@ class MapWithCurrentLocation(val backedMap: GoogleMap, val holdingActivity: Acti
         get() = currentLocationMarker?.position
 
     override fun onLocationChanged(location: Location) {
-        Log.d("Debug", "enter")
         currentLocationMarker?.remove()
         val latLng = LatLng(location.latitude, location.longitude)
         currentLocationMarker = backedMap.addMarker(
