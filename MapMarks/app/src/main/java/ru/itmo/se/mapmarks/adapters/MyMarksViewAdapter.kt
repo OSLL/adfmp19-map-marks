@@ -1,12 +1,16 @@
 package ru.itmo.se.mapmarks.adapters
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import ru.itmo.se.mapmarks.MainScreenActivity
 import ru.itmo.se.mapmarks.R
 import ru.itmo.se.mapmarks.data.mark.Mark
 import kotlin.random.Random
@@ -37,5 +41,16 @@ class MyMarksViewAdapter(allElements: List<Mark>, context: Context) :
         val markDescriptionView: TextView = view.findViewById(R.id.my_marks_mark_description)
         val markCategoryView: TextView = view.findViewById(R.id.my_marks_mark_category)
         val markLocationDescriptionView: TextView = view.findViewById(R.id.my_marks_mark_location)
+
+        init {
+            view.setOnClickListener {
+                val name = (view.findViewById(R.id.my_marks_mark_name) as TextView).text.toString()
+                val newMarkIntent = Intent(context, MainScreenActivity::class.java)
+                newMarkIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                newMarkIntent.putExtra("selectMark", name)
+                (context as Activity).finish()
+                context.startActivity(newMarkIntent)
+            }
+        }
     }
 }

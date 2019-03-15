@@ -8,6 +8,7 @@ import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SearchView
+import android.util.Log
 import android.view.*
 import android.view.animation.AnimationUtils
 import android.widget.AdapterView
@@ -50,8 +51,6 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         addMarkButtonMain.setOnClickListener(AddMarkButtonOnClickListener(this, RequestCodes.MAIN_ADD_MARK))
-//        addMarkButtonMain.setOnClickListener(StartActivityForResultListener(this, AddMarkActivity::class.java, 1))
-
         (mainScreenMap as SupportMapFragment).getMapAsync(this)
 
         navView.setNavigationItemSelectedListener { menuItem ->
@@ -84,8 +83,7 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
         searchAutoComplete.onItemClickListener =
             AdapterView.OnItemClickListener { parent, _, position, _ ->
                 val mark = parent?.getItemAtPosition(position) as Mark
-                val cameraUpdate = CameraUpdateFactory.newLatLngBounds(mark.getBound(), 25, 25, 5)
-                map.backedMap.animateCamera(cameraUpdate)
+                flyToMark(map.backedMap, mark)
             }
         return true
     }
@@ -135,6 +133,12 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
             onMarkClick(mark)
             true
         }
+
+        val selectName = intent.getStringExtra("selectMark")
+        if (selectName != null) {
+            val mark = markInfoContainer.getMarkByName(selectName)
+            flyToMark(googleMap, mark)
+        }
     }
 
     private fun onMarkClick(mark: Mark) {
@@ -183,10 +187,12 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
             layout.animation = AnimationUtils.loadAnimation(applicationContext, R.anim.slide_up)
             setEnable(mark_info_sheet, true)
             layout.visibility = View.VISIBLE
-            editButton.setOnClickListener(EditMarkButtonOnClickListener(
-                this@MainScreenActivity,
-                requestCode = RequestCodes.MAIN_EDIT_MARK,
-                markNameToEdit = markName.text.toString())
+            editButton.setOnClickListener(
+                EditMarkButtonOnClickListener(
+                    this@MainScreenActivity,
+                    requestCode = RequestCodes.MAIN_EDIT_MARK,
+                    markNameToEdit = markName.text.toString()
+                )
             )
         }
 
