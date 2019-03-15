@@ -3,6 +3,7 @@ package ru.itmo.se.mapmarks.addElementActivity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.google.android.gms.maps.model.LatLng
@@ -44,10 +45,10 @@ abstract class ManipulateMarkActivity: ManipulateElementActivity() {
     override fun doNext() {
         val name = addMarkName.text.toString()
         val description = addMarkDescription.text.toString()
-        try {
+        if (!markInfoContainer.containsMark(name)) {
             propagateToNextActivity(name, description)
-        } catch (e: IOException) {
-            addMarkNameLayout.error = e.message
+        } else {
+            addMarkNameLayout.error = "Метка с таким именем уже существует"
         }
     }
 
