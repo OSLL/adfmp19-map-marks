@@ -8,25 +8,26 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import android.util.Log
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
 import com.google.android.gms.maps.model.LatLng
 
 class MapWithCurrentLocation(val backedMap: GoogleMap, val holdingActivity: Activity): LocationListener {
+    private var currentLocationMarker: Marker? = null
+    private var locationManager: LocationManager? = null
+    private var cameraMoved: Boolean = false
 
     init {
         requestPermissions()
     }
 
-    private var currentLocationMarker: Marker? = null
-    private var locationManager: LocationManager? = null
-    private var cameraMoved: Boolean = false
-
     val currentLocation: LatLng?
         get() = currentLocationMarker?.position
 
     override fun onLocationChanged(location: Location) {
+        Log.d("Debug", "enter")
         currentLocationMarker?.remove()
         val latLng = LatLng(location.latitude, location.longitude)
         currentLocationMarker = backedMap.addMarker(

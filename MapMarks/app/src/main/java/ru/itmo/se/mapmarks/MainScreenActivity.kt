@@ -23,7 +23,6 @@ import kotlinx.android.synthetic.main.mark_info_sheet_layout.*
 import ru.itmo.se.mapmarks.myElementsActivity.MyCategoriesActivity
 import ru.itmo.se.mapmarks.myElementsActivity.MyMarksActivity
 import ru.itmo.se.mapmarks.prototype.LocationConverter
-import kotlin.random.Random
 import android.view.ViewGroup
 import ru.itmo.se.mapmarks.data.resources.RequestCodes
 import ru.itmo.se.mapmarks.map.MapWithCurrentLocation
@@ -172,6 +171,7 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
             layout.visibility = View.INVISIBLE
         }
 
+        @SuppressLint("SetTextI18n")
         fun fillMarkInfo(mark: Mark) {
             //TODO replace hardcode everywhere
             markName.setTextColor(mark.category.color)
@@ -180,7 +180,7 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
             markInfoDescription.text = mark.description
             markInfoLocation.text = LocationConverter.convert(mark.getPosition().latitude, mark.getPosition().longitude)
             markInfoPlace.text = "Пенза, РФ"
-            markInfoDistance.text = "${Random.nextInt(12000)}км от Вас"
+            markInfoDistance.text = "${getDistance(map.currentLocation!!, mark.getPosition())} км от Вас"
             selectMark = mark
         }
 

@@ -5,6 +5,7 @@ import android.content.res.ColorStateList
 import android.view.View
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.LatLng
 import ru.itmo.se.mapmarks.data.mark.Mark
 
 fun setViewColor(view: View, color: Int) {
@@ -15,4 +16,19 @@ fun setViewColor(view: View, color: Int) {
 fun flyToMark(map: GoogleMap, mark: Mark) {
     val cameraUpdate = CameraUpdateFactory.newLatLngBounds(mark.getBound(), 10)
     map.animateCamera(cameraUpdate)
+}
+
+fun getDistance(latLng1: LatLng, latLng2: LatLng): Double {
+    val lat1 = latLng1.latitude
+    val lon1 = latLng1.longitude
+    val lat2 = latLng2.latitude
+    val lon2 = latLng2.longitude
+    val radius = 6371// radius of earth in Km
+    val dLat = Math.toRadians(lat2 - lat1)
+    val dLon = Math.toRadians(lon2 - lon1)
+    val a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + (Math.cos(Math.toRadians(lat1))
+            * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2)
+            * Math.sin(dLon / 2))
+    val c = 2 * Math.asin(Math.sqrt(a))
+    return radius * c
 }
