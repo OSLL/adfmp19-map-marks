@@ -6,7 +6,7 @@ import android.view.View
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
-import ru.itmo.se.mapmarks.data.mark.Mark
+import com.google.android.gms.maps.model.LatLngBounds
 import java.lang.Math.rint
 
 fun setViewColor(view: View, color: Int) {
@@ -14,8 +14,8 @@ fun setViewColor(view: View, color: Int) {
         ColorStateList(Array(1) { IntArray(1) { R.attr.state_enabled } }, IntArray(1) { color })
 }
 
-fun flyToMark(map: GoogleMap, mark: Mark) {
-    val cameraUpdate = CameraUpdateFactory.newLatLngBounds(mark.getBound(), 10)
+fun flyToMark(map: GoogleMap, bound: LatLngBounds) {
+    val cameraUpdate = CameraUpdateFactory.newLatLngBounds(bound, 10)
     map.animateCamera(cameraUpdate)
 }
 

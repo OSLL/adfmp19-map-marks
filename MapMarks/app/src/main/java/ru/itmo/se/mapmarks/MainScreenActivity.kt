@@ -86,7 +86,7 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
         searchAutoComplete.onItemClickListener =
             AdapterView.OnItemClickListener { parent, _, position, _ ->
                 val mark = parent?.getItemAtPosition(position) as Mark
-                flyToMark(map.backedMap, mark)
+                flyToMark(map.backedMap, mark.getBound())
             }
         return true
     }
@@ -140,7 +140,9 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
         val selectName = intent.getStringExtra("selectMark")
         if (selectName != null) {
             val mark = markInfoContainer.getMarkByName(selectName)
-            flyToMark(googleMap, mark)
+            flyToMark(googleMap, mark.getBound())
+        } else {
+            map.moveCameraToCurrentPosition()
         }
     }
 
