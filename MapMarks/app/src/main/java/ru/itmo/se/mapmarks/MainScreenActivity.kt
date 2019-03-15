@@ -29,11 +29,13 @@ import ru.itmo.se.mapmarks.data.resources.RequestCodes
 import ru.itmo.se.mapmarks.map.MapWithCurrentLocation
 import android.widget.ArrayAdapter
 import com.google.android.gms.maps.CameraUpdateFactory
+import ru.itmo.se.mapmarks.addElementActivity.AddMarkActivity
 
 class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private lateinit var markInfoPopup: MarkInfoPopup
     private val markInfoContainer = DummyMarkInfoContainer.INSTANCE
     private lateinit var map: MapWithCurrentLocation
+    private lateinit var marksAdapter: ArrayAdapter<Mark>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +51,8 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
         }
 
         addMarkButtonMain.setOnClickListener(AddMarkButtonOnClickListener(this, RequestCodes.MAIN_ADD_MARK))
+//        addMarkButtonMain.setOnClickListener(StartActivityForResultListener(this, AddMarkActivity::class.java, 1))
+
         (mainScreenMap as SupportMapFragment).getMapAsync(this)
 
         navView.setNavigationItemSelectedListener { menuItem ->
@@ -76,10 +80,10 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
         val searchView = menu.findItem(R.id.mainScreenSearch).actionView as SearchView
         val searchAutoComplete =
             searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text) as SearchView.SearchAutoComplete
-        val adapter = ArrayAdapter(
+        marksAdapter = ArrayAdapter(
             this, android.R.layout.simple_list_item_1, markInfoContainer.allMarks as List
         )
-        searchAutoComplete.setAdapter(adapter)
+        searchAutoComplete.setAdapter(marksAdapter)
         searchAutoComplete.onItemClickListener =
             AdapterView.OnItemClickListener { parent, _, position, _ ->
                 val mark = parent?.getItemAtPosition(position) as Mark
@@ -100,10 +104,13 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == RequestCodes.MAIN_ADD_MARK) {
-                Toast.makeText(this@MainScreenActivity, "Метка добавлена", Toast.LENGTH_SHORT).show()
-            }
+        if (data != null && requestCode in arrayOf(1, 2, 3, 4) && resultCode == Activity.RESULT_OK) {
+            Toast.makeText(this@MainScreenActivity, "Метка добавлена", Toast.LENGTH_SHORT).show()
+            val name = data.getStringExtra("name")
+            val newMark = markInfoContainer.getMarkByName(name)
+            marksAdapter.remove(newMark)
+            marksAdapter.add(newMark)
+            map.backedMap.addMarker(newMark.options.icon(getMarkerIcon(newMark.category.color))).tag = newMark
         }
     }
 

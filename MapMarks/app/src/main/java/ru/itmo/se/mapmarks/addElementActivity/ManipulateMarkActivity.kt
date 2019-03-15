@@ -69,10 +69,10 @@ abstract class ManipulateMarkActivity: ManipulateElementActivity() {
                     RequestCodes.MARK_SELECT_POSITION -> {
                         val name = data.getStringExtra("name")
                         val description = data.getStringExtra("description")
-                        val latitude = data.getDoubleExtra("lat", -1.0)
-                        val longitude = data.getDoubleExtra("lon", -1.0)
+                        val latitude = data.getDoubleExtra("lat", 5.0)
+                        val longitude = data.getDoubleExtra("lon", 5.0)
                         createAndAddMark(name, description, LatLng(latitude, longitude))
-                        setResult(Activity.RESULT_OK)
+                        setResult(Activity.RESULT_OK, data)
                         finish()
                     }
                 }

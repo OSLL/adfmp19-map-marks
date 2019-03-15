@@ -15,6 +15,14 @@ class AddMarkButtonOnClickListener(val activity: Activity, val requestCode: Int)
     }
 }
 
+class AddCategoryClickListener(val activity: Activity, val requestCode: Int): View.OnClickListener {
+
+    override fun onClick(view: View) {
+        val newMarkIntent = Intent(activity, AddCategoryActivity::class.java)
+        activity.startActivityForResult(newMarkIntent, requestCode)
+    }
+}
+
 class EditMarkButtonOnClickListener(val activity: Activity, val requestCode: Int, val markNameToEdit: String): View.OnClickListener {
 
     override fun onClick(view: View) {
@@ -24,10 +32,12 @@ class EditMarkButtonOnClickListener(val activity: Activity, val requestCode: Int
     }
 }
 
-class AddCategoryClickListener(val activity: Activity, val requestCode: Int): View.OnClickListener {
 
-    override fun onClick(view: View) {
-        val newMarkIntent = Intent(activity, AddCategoryActivity::class.java)
-        activity.startActivityForResult(newMarkIntent, requestCode)
-    }
-}
+//class StartActivityForResultListener(val currentActivity: Activity, val nextActivity: Class<*>, val requestCode: Int) :
+//    View.OnClickListener {
+//
+//    override fun onClick(view: View) {
+//        val newMarkIntent = Intent(currentActivity, nextActivity)
+//        currentActivity.startActivityForResult(newMarkIntent, requestCode)
+//    }
+//}
