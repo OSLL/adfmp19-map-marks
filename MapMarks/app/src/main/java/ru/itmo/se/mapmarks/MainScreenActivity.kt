@@ -7,8 +7,10 @@ import android.os.Bundle
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.SearchView
 import android.view.*
 import android.view.animation.AnimationUtils
+import android.widget.AdapterView
 import android.widget.Toast
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -25,6 +27,8 @@ import kotlin.random.Random
 import android.view.ViewGroup
 import ru.itmo.se.mapmarks.data.resources.RequestCodes
 import ru.itmo.se.mapmarks.map.MapWithCurrentLocation
+import android.widget.ArrayAdapter
+import com.google.android.gms.maps.CameraUpdateFactory
 
 class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private lateinit var markInfoPopup: MarkInfoPopup
@@ -69,6 +73,18 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_screen_menu_search, menu)
+        val searchView = menu.findItem(R.id.mainScreenSearch).actionView as SearchView
+        val searchAutoComplete =
+            searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text) as SearchView.SearchAutoComplete
+        val adapter = ArrayAdapter(
+            this, android.R.layout.simple_list_item_1, markInfoContainer.allMarks as List
+        )
+        searchAutoComplete.setAdapter(adapter)
+        searchAutoComplete.onItemClickListener =
+            AdapterView.OnItemClickListener { parent, _, position, _ ->
+                val mark = parent?.getItemAtPosition(position) as Mark
+                map.backedMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mark.options.position, 14F))
+            }
         return true
     }
 
