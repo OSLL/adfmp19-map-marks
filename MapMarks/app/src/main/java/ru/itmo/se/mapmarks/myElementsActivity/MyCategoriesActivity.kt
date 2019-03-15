@@ -18,5 +18,5 @@ class MyCategoriesActivity :
     }
 
     override fun actualAdapter(context: Context) =
-        MyCategoriesViewAdapter(DummyMarkInfoContainer.INSTANCE.allCategories.toList(), context)
+        MyCategoriesViewAdapter(DummyMarkInfoContainer.INSTANCE.allCategories.toList(), context, currentLocation)
 }

@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.widget.Toast
+import com.google.android.gms.maps.model.LatLng
 import ru.itmo.se.mapmarks.R
 import kotlinx.android.synthetic.main.activity_my_elements.*
 import ru.itmo.se.mapmarks.adapters.MyElementsViewAdapter
@@ -16,10 +17,14 @@ import ru.itmo.se.mapmarks.adapters.MyElementsViewAdapter
 @SuppressLint("Registered")
 abstract class MyElementsActivity<T : RecyclerView.ViewHolder, B>(private val addSuccessMessage: String) :
     AppCompatActivity() {
+    protected lateinit var currentLocation: LatLng
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_elements)
+        val locationArray = intent.getDoubleArrayExtra("currentLocation")
+        currentLocation = LatLng(locationArray[0], locationArray[1])
 
         myRecyclerView.layoutManager = LinearLayoutManager(this)
         myRecyclerView.adapter = actualAdapter(this)

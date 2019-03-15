@@ -1,22 +1,23 @@
 package ru.itmo.se.mapmarks.adapters
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.google.android.gms.maps.model.LatLng
 import ru.itmo.se.mapmarks.MainScreenActivity
 import ru.itmo.se.mapmarks.R
 import ru.itmo.se.mapmarks.data.mark.Mark
-import kotlin.random.Random
+import ru.itmo.se.mapmarks.getDistance
 
-class MyMarksViewAdapter(allElements: List<Mark>, context: Context) :
-    MyElementsViewAdapter<MyMarksViewAdapter.MyMarksViewHolder, Mark>(allElements, context) {
+class MyMarksViewAdapter(allElements: List<Mark>,context: Context, currentLocation: LatLng) :
+    MyElementsViewAdapter<MyMarksViewAdapter.MyMarksViewHolder, Mark>(allElements, context, currentLocation) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyMarksViewHolder {
         val markView = LayoutInflater.from(parent.context).inflate(R.layout.my_marks_cards, parent, false)
@@ -25,6 +26,7 @@ class MyMarksViewAdapter(allElements: List<Mark>, context: Context) :
 
     override fun getItemCount() = allElements.size
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: MyMarksViewHolder, position: Int) {
         val currentMark = allElements[position]
         holder.markNameView.text = currentMark.name
@@ -32,7 +34,7 @@ class MyMarksViewAdapter(allElements: List<Mark>, context: Context) :
         holder.markCategoryView.text = context.getString(R.string.my_marks_category_tag) + currentMark.category.name
 
         // TODO real location
-        holder.markLocationDescriptionView.text = "${Random.nextInt(12000)} км от Вас"
+        holder.markLocationDescriptionView.text = "${getDistance(currentLocation, currentMark.getPosition())} км от Вас"
         holder.view.findViewById<CardView>(R.id.my_marks_card_view).setCardBackgroundColor(currentMark.category.color)
     }
 

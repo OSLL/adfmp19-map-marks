@@ -8,13 +8,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.google.android.gms.maps.model.LatLng
 import ru.itmo.se.mapmarks.R
 import ru.itmo.se.mapmarks.data.category.Category
 import ru.itmo.se.mapmarks.myElementsActivity.MyMarksActivity
 import ru.itmo.se.mapmarks.prototype.DummyMarkInfoContainer
 
-class MyCategoriesViewAdapter(allElements: List<Category>, context: Context) :
-    MyElementsViewAdapter<MyCategoriesViewAdapter.MyCategoriesViewHolder, Category>(allElements, context) {
+class MyCategoriesViewAdapter(allElements: List<Category>, context: Context, currentLocation: LatLng) :
+    MyElementsViewAdapter<MyCategoriesViewAdapter.MyCategoriesViewHolder, Category>(
+        allElements,
+        context,
+        currentLocation
+    ) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyCategoriesViewHolder {
         val categoryView = LayoutInflater.from(parent.context).inflate(R.layout.my_categories_cards, parent, false)
@@ -41,6 +46,7 @@ class MyCategoriesViewAdapter(allElements: List<Category>, context: Context) :
             view.setOnClickListener { view ->
                 val categoryMarksIntent = Intent(context, MyMarksActivity::class.java)
                 categoryMarksIntent.putExtra("name", categoryNameView.text.toString())
+                    .putExtra("currentLocation", doubleArrayOf(currentLocation.latitude, currentLocation.longitude))
                 context.startActivity(categoryMarksIntent)
             }
         }

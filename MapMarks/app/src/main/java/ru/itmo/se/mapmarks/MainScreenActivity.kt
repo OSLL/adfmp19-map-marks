@@ -53,10 +53,15 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
 
         navView.setNavigationItemSelectedListener { menuItem ->
             menuItem.isChecked = true
-            when (menuItem.itemId) {
-                R.id.mainMyMarksOptionMenu -> startActivity(Intent(this, MyMarksActivity::class.java))
-                R.id.mainMyCategoriesOptionMenu -> startActivity(Intent(this, MyCategoriesActivity::class.java))
-            }
+            startActivity(
+                when (menuItem.itemId) {
+                    R.id.mainMyMarksOptionMenu -> Intent(this, MyMarksActivity::class.java)
+                    else -> Intent(this, MyCategoriesActivity::class.java)
+                }.putExtra(
+                    "currentLocation",
+                    doubleArrayOf(map.currentLocation!!.latitude, map.currentLocation!!.longitude)
+                )
+            )
             drawerLayout.closeDrawers()
             true
         }
@@ -130,13 +135,13 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
             true
         }
 
+        map = MapWithCurrentLocation(googleMap, this)
+
         val selectName = intent.getStringExtra("selectMark")
         if (selectName != null) {
             val mark = markInfoContainer.getMarkByName(selectName)
             flyToMark(googleMap, mark)
         }
-
-        map = MapWithCurrentLocation(googleMap, this)
     }
 
     private fun onMarkClick(mark: Mark) {
@@ -183,7 +188,6 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
             markCategory.text = mark.category.name
             markInfoDescription.text = mark.description
             markInfoLocation.text = LocationConverter.convert(mark.getPosition().latitude, mark.getPosition().longitude)
-            markInfoPlace.text = "Пенза, РФ"
             markInfoDistance.text = "${getDistance(map.currentLocation!!, mark.getPosition())} км от Вас"
             selectMark = mark
         }

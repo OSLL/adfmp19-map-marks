@@ -20,7 +20,6 @@ class MyMarksActivity : MyElementsActivity<MyMarksViewAdapter.MyMarksViewHolder,
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_my_elements)
-        val intent = intent
         val categoryName = intent.getStringExtra("name")
         if (categoryName != null) {
             marksList = marksList.filter { it.category.name == categoryName }.toList()
@@ -40,7 +39,7 @@ class MyMarksActivity : MyElementsActivity<MyMarksViewAdapter.MyMarksViewHolder,
         )
     }
 
-    override fun actualAdapter(context: Context) = MyMarksViewAdapter(marksList, context)
+    override fun actualAdapter(context: Context) = MyMarksViewAdapter(marksList, context, currentLocation)
 
     private fun viewCategoryMarks(categoryName: String) {
         val newMarkIntent = Intent(this, MainScreenActivity::class.java)
