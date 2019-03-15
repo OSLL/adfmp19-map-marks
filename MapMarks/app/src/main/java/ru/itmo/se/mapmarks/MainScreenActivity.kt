@@ -1,5 +1,6 @@
 package ru.itmo.se.mapmarks
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
@@ -29,21 +30,21 @@ import ru.itmo.se.mapmarks.data.resources.RequestCodes
 import ru.itmo.se.mapmarks.map.MapWithCurrentLocation
 import android.widget.ArrayAdapter
 import com.google.android.gms.maps.CameraUpdateFactory
-import ru.itmo.se.mapmarks.addElementActivity.AddMarkActivity
 
 class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private lateinit var markInfoPopup: MarkInfoPopup
     private val markInfoContainer = DummyMarkInfoContainer.INSTANCE
     private lateinit var map: MapWithCurrentLocation
     private lateinit var marksAdapter: ArrayAdapter<Mark>
+    private var categoryName: String? = null
+    private var markList = markInfoContainer.allMarks.toList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_screen)
+        initFilter()
         markInfoPopup = MarkInfoPopup()
-
         setSupportActionBar(mainMenuToolbar)
-
         val actionbar: ActionBar? = supportActionBar
         actionbar?.apply {
             setDisplayHomeAsUpEnabled(true)
@@ -80,9 +81,7 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
         val searchView = menu.findItem(R.id.mainScreenSearch).actionView as SearchView
         val searchAutoComplete =
             searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text) as SearchView.SearchAutoComplete
-        marksAdapter = ArrayAdapter(
-            this, android.R.layout.simple_list_item_1, markInfoContainer.allMarks as List
-        )
+        marksAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, markList)
         searchAutoComplete.setAdapter(marksAdapter)
         searchAutoComplete.onItemClickListener =
             AdapterView.OnItemClickListener { parent, _, position, _ ->
@@ -108,9 +107,11 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
             Toast.makeText(this@MainScreenActivity, "Метка добавлена", Toast.LENGTH_SHORT).show()
             val name = data.getStringExtra("name")
             val newMark = markInfoContainer.getMarkByName(name)
-            marksAdapter.remove(newMark)
-            marksAdapter.add(newMark)
-            map.backedMap.addMarker(newMark.options.icon(getMarkerIcon(newMark.category.color))).tag = newMark
+            if (newMark.category.name == categoryName) {
+                marksAdapter.remove(newMark)
+                marksAdapter.add(newMark)
+                map.backedMap.addMarker(newMark.options.icon(getMarkerIcon(newMark.category.color))).tag = newMark
+            }
         }
     }
 
@@ -122,12 +123,13 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
             markInfoPopup.hidePopup()
         }
 
-        // TODO show minimal size bounding box which including all marks
-        markInfoContainer.allMarks.forEach {
-            googleMap.addMarker(it.options.icon(getMarkerIcon(it.category.color))).tag = it
+        map = MapWithCurrentLocation(googleMap, this)
+
+        //TODO show minimal size bounding box which including all marks
+        markList.forEach {
+            map.backedMap.addMarker(it.options.icon(getMarkerIcon(it.category.color))).tag = it
         }
 
-        map = MapWithCurrentLocation(googleMap, this)
     }
 
     override fun onMarkerClick(marker: Marker): Boolean {
@@ -145,6 +147,28 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.On
         val hsv = FloatArray(3)
         Color.colorToHSV(color, hsv)
         return BitmapDescriptorFactory.defaultMarker(hsv[0])
+    }
+
+    @SuppressLint("RestrictedApi")
+    private fun initFilter() {
+        categoryName = intent.getStringExtra("categoryName")
+        if (categoryName != null) {
+            val category = markInfoContainer.getCategoryByName(categoryName!!)
+            markList = markList.filter { it.category.name == categoryName }
+            removeCategoryButton.visibility = View.VISIBLE
+            setViewColor(removeCategoryButton, category.color)
+            removeCategoryButton.setOnClickListener {
+                map.backedMap.clear()
+                marksAdapter.clear()
+                markList = markInfoContainer.allMarks.toList()
+                removeCategoryButton.visibility = View.INVISIBLE
+
+                markList.forEach {
+                    map.backedMap.addMarker(it.options.icon(getMarkerIcon(it.category.color))).tag = it
+                }
+                marksAdapter.addAll(markList)
+            }
+        }
     }
 
     private inner class MarkInfoPopup {
