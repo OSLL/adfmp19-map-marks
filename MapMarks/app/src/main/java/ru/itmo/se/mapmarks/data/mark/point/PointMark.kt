@@ -14,7 +14,9 @@ class PointMark(name: String, description: String, category: Category, private v
     override fun getBound() = LatLngBounds(options.position, options.position)
 
     override fun addToMap(map: GoogleMap) {
-        map.addMarker(options.icon(getMarkerIcon(category.color))).tag = this
+        val marker = map.addMarker(options.icon(getMarkerIcon(category.color)))
+        marker.tag = this
+        marker.title = name
     }
 
     override fun getPosition() = options.position
