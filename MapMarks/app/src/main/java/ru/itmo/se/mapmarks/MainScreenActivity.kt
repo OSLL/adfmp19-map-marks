@@ -3,12 +3,12 @@ package ru.itmo.se.mapmarks
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SearchView
-import android.util.Log
 import android.view.*
 import android.view.animation.AnimationUtils
 import android.widget.AdapterView
@@ -166,6 +166,7 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private inner class MarkInfoPopup {
         private val layout = mark_info_sheet
+        private lateinit var selectMark: Mark
 
         init {
             layout.visibility = View.INVISIBLE
@@ -180,12 +181,14 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
             markInfoLocation.text = LocationConverter.convert(mark.getPosition().latitude, mark.getPosition().longitude)
             markInfoPlace.text = "Пенза, РФ"
             markInfoDistance.text = "${Random.nextInt(12000)}км от Вас"
+            selectMark = mark
         }
 
         fun showPopup() {
             layout.animation = AnimationUtils.loadAnimation(applicationContext, R.anim.slide_up)
             setEnable(mark_info_sheet, true)
             layout.visibility = View.VISIBLE
+
             editButton.setOnClickListener(
                 EditMarkButtonOnClickListener(
                     this@MainScreenActivity,
@@ -193,6 +196,15 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
                     markNameToEdit = markName.text.toString()
                 )
             )
+
+            routeButton.setOnClickListener {
+                val position = selectMark.getPosition()
+                val intent = Intent(
+                    android.content.Intent.ACTION_VIEW,
+                    Uri.parse("http://maps.google.com/maps?daddr=${position.latitude},${position.longitude}")
+                )
+                startActivity(intent)
+            }
         }
 
         fun hidePopup() {
@@ -211,4 +223,3 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 }
-
