@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.activity_add_mark.*
 import ru.itmo.se.mapmarks.R
 import ru.itmo.se.mapmarks.SelectCategorySpinnerListener
 import ru.itmo.se.mapmarks.data.mark.Mark
+import ru.itmo.se.mapmarks.data.mark.point.PointMark
 import ru.itmo.se.mapmarks.data.resources.RequestCodes
 import java.io.IOException
 
@@ -18,7 +19,7 @@ abstract class ManipulateMarkActivity: ManipulateElementActivity() {
 
     abstract fun createAndAddMark(name: String, description: String, position: LatLng?)
 
-    protected fun createMark(name: String, description: String, position: LatLng?) = Mark(
+    protected fun createMark(name: String, description: String, position: LatLng?) = PointMark(
         name,
         description,
         markInfoContainer.getCategoryByName(categoriesList[addSelectCategorySpinner.selectedItemPosition]),
