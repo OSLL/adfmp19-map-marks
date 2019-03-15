@@ -31,13 +31,3 @@ class EditMarkButtonOnClickListener(val activity: Activity, val requestCode: Int
         activity.startActivityForResult(newMarkIntent, requestCode)
     }
 }
-
-
-//class StartActivityForResultListener(val currentActivity: Activity, val nextActivity: Class<*>, val requestCode: Int) :
-//    View.OnClickListener {
-//
-//    override fun onClick(view: View) {
-//        val newMarkIntent = Intent(currentActivity, nextActivity)
-//        currentActivity.startActivityForResult(newMarkIntent, requestCode)
-//    }
-//}

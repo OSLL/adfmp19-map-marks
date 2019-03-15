@@ -8,6 +8,7 @@ import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SearchView
+import android.util.Log
 import android.view.*
 import android.view.animation.AnimationUtils
 import android.widget.AdapterView
@@ -27,7 +28,6 @@ import android.view.ViewGroup
 import ru.itmo.se.mapmarks.data.resources.RequestCodes
 import ru.itmo.se.mapmarks.map.MapWithCurrentLocation
 import android.widget.ArrayAdapter
-import com.google.android.gms.maps.CameraUpdateFactory
 
 class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var markInfoPopup: MarkInfoPopup
@@ -50,8 +50,6 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         addMarkButtonMain.setOnClickListener(AddMarkButtonOnClickListener(this, RequestCodes.MAIN_ADD_MARK))
-//        addMarkButtonMain.setOnClickListener(StartActivityForResultListener(this, AddMarkActivity::class.java, 1))
-
         (mainScreenMap as SupportMapFragment).getMapAsync(this)
 
         navView.setNavigationItemSelectedListener { menuItem ->
@@ -84,8 +82,7 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
         searchAutoComplete.onItemClickListener =
             AdapterView.OnItemClickListener { parent, _, position, _ ->
                 val mark = parent?.getItemAtPosition(position) as Mark
-                val cameraUpdate = CameraUpdateFactory.newLatLngBounds(mark.getBound(), 10)
-                map.backedMap.animateCamera(cameraUpdate)
+                flyToMark(map.backedMap, mark)
             }
         return true
     }
@@ -121,20 +118,26 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
             markInfoPopup.hidePopup()
         }
 
-        map = MapWithCurrentLocation(googleMap, this)
-
         //TODO show minimal size bounding box which including all marks
-        markList.forEach { it.addToMap(map.backedMap) }
+        markList.forEach { it.addToMap(googleMap) }
 
-        map.backedMap.setOnPolygonClickListener {
+        googleMap.setOnPolygonClickListener {
             val mark = it.tag as? Mark ?: return@setOnPolygonClickListener
             onMarkClick(mark)
         }
-        map.backedMap.setOnMarkerClickListener {
+        googleMap.setOnMarkerClickListener {
             val mark = it.tag as? Mark ?: return@setOnMarkerClickListener true
             onMarkClick(mark)
             true
         }
+
+        val selectName = intent.getStringExtra("selectMark")
+        if (selectName != null) {
+            val mark = markInfoContainer.getMarkByName(selectName)
+            flyToMark(googleMap, mark)
+        }
+
+        map = MapWithCurrentLocation(googleMap, this)
     }
 
     private fun onMarkClick(mark: Mark) {
@@ -183,10 +186,12 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
             layout.animation = AnimationUtils.loadAnimation(applicationContext, R.anim.slide_up)
             setEnable(mark_info_sheet, true)
             layout.visibility = View.VISIBLE
-            editButton.setOnClickListener(EditMarkButtonOnClickListener(
-                this@MainScreenActivity,
-                requestCode = RequestCodes.MAIN_EDIT_MARK,
-                markNameToEdit = markName.text.toString())
+            editButton.setOnClickListener(
+                EditMarkButtonOnClickListener(
+                    this@MainScreenActivity,
+                    requestCode = RequestCodes.MAIN_EDIT_MARK,
+                    markNameToEdit = markName.text.toString()
+                )
             )
         }
 
