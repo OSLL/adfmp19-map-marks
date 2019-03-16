@@ -1,6 +1,5 @@
 package ru.itmo.se.mapmarks.data.storage
 
-import android.util.Log
 import ru.itmo.se.mapmarks.data.category.Category
 import ru.itmo.se.mapmarks.data.mark.Mark
 import java.io.IOException

@@ -10,8 +10,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import ru.itmo.se.mapmarks.R
 import ru.itmo.se.mapmarks.data.category.Category
+import ru.itmo.se.mapmarks.data.storage.SavedMarkInfoContainer
 import ru.itmo.se.mapmarks.myElementsActivity.MyMarksActivity
-import ru.itmo.se.mapmarks.prototype.DummyMarkInfoContainer
 
 class MyCategoriesViewAdapter(allElements: List<Category>, context: Context) :
     MyElementsViewAdapter<MyCategoriesViewAdapter.MyCategoriesViewHolder, Category>(allElements, context) {
@@ -26,7 +26,7 @@ class MyCategoriesViewAdapter(allElements: List<Category>, context: Context) :
         holder.categoryNameView.text = currentCategory.name
         holder.categoryDescriptionView.text = currentCategory.description
         holder.marksInCategoryCountView.text =
-            context.getString(R.string.my_categories_count_tag) + DummyMarkInfoContainer.INSTANCE.getMarksForCategory(
+            context.getString(R.string.my_categories_count_tag) + SavedMarkInfoContainer.INSTANCE.getMarksForCategory(
                 currentCategory
             ).toList().size
         holder.view.findViewById<CardView>(R.id.my_categories_card_view).setCardBackgroundColor(currentCategory.color)

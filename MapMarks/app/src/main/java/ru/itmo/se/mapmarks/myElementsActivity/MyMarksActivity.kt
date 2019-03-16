@@ -12,10 +12,10 @@ import ru.itmo.se.mapmarks.R
 import ru.itmo.se.mapmarks.adapters.MyMarksViewAdapter
 import ru.itmo.se.mapmarks.data.mark.Mark
 import ru.itmo.se.mapmarks.data.resources.RequestCodes
-import ru.itmo.se.mapmarks.prototype.DummyMarkInfoContainer
+import ru.itmo.se.mapmarks.data.storage.SavedMarkInfoContainer
 
 class MyMarksActivity : MyElementsActivity<MyMarksViewAdapter.MyMarksViewHolder, Mark>("Метка добавлена") {
-    private var marksList = DummyMarkInfoContainer.INSTANCE.allMarks.toList()
+    private var marksList = SavedMarkInfoContainer.INSTANCE.allMarks.toList()
 
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {

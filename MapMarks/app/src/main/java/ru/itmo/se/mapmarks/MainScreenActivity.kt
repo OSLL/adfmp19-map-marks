@@ -19,7 +19,6 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import kotlinx.android.synthetic.main.activity_main_screen.*
 import ru.itmo.se.mapmarks.data.mark.Mark
-import ru.itmo.se.mapmarks.prototype.DummyMarkInfoContainer
 import kotlinx.android.synthetic.main.mark_info_sheet_layout.*
 import ru.itmo.se.mapmarks.myElementsActivity.MyCategoriesActivity
 import ru.itmo.se.mapmarks.myElementsActivity.MyMarksActivity
@@ -31,19 +30,20 @@ import ru.itmo.se.mapmarks.map.MapWithCurrentLocation
 import android.widget.ArrayAdapter
 import com.google.android.gms.maps.CameraUpdateFactory
 import ru.itmo.se.mapmarks.data.storage.GsonContainerWriter
+import ru.itmo.se.mapmarks.data.storage.MarkInfoContainer
+import ru.itmo.se.mapmarks.data.storage.SavedMarkInfoContainer
 
 class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var markInfoPopup: MarkInfoPopup
-    private val markInfoContainer = DummyMarkInfoContainer.INSTANCE
+    private lateinit var markInfoContainer: MarkInfoContainer
     private lateinit var map: MapWithCurrentLocation
     private lateinit var marksAdapter: ArrayAdapter<Mark>
     private var categoryName: String? = null
-    private var markList = markInfoContainer.allMarks.toList()
+    private lateinit var markList: List<Mark>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_screen)
-        initFilter()
         markInfoPopup = MarkInfoPopup()
         setSupportActionBar(mainMenuToolbar)
         val actionbar: ActionBar? = supportActionBar
@@ -51,6 +51,8 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(android.R.drawable.ic_menu_camera)
         }
+
+        initContainer()
 
         addMarkButtonMain.setOnClickListener(AddMarkButtonOnClickListener(this, RequestCodes.MAIN_ADD_MARK))
 //        addMarkButtonMain.setOnClickListener(StartActivityForResultListener(this, AddMarkActivity::class.java, 1))
@@ -78,11 +80,15 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onPause() {
+        Log.d("DEBUG", "On pause")
         super.onPause()
-        val serializedContainerData = markInfoContainer.write(GsonContainerWriter())
-        applicationContext.openFileOutput(resources.getString(R.string.savedDataFileName), Context.MODE_PRIVATE).use {
-            it.write(serializedContainerData.toByteArray())
-        }
+        saveData()
+    }
+
+    override fun onDestroy() {
+        Log.d("DEBUG", "On destroy")
+        super.onDestroy()
+        saveData()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -157,6 +163,9 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun initFilter() {
         categoryName = intent.getStringExtra("categoryName")
         if (categoryName != null) {
+            if (!::markInfoContainer.isInitialized) {
+                initContainer()
+            }
             val category = markInfoContainer.getCategoryByName(categoryName!!)
             markList = markList.filter { it.category.name == categoryName }
             removeCategoryButton.visibility = View.VISIBLE
@@ -169,6 +178,20 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
                 markList.forEach { it.addToMap(map.backedMap) }
                 marksAdapter.addAll(markList)
             }
+        }
+    }
+
+    private fun initContainer() {
+        SavedMarkInfoContainer.register(applicationContext, R.string.savedDataFileName)
+        markInfoContainer = SavedMarkInfoContainer.INSTANCE
+        markList = markInfoContainer.allMarks.toList()
+        initFilter()
+    }
+
+    private fun saveData() {
+        val serializedContainerData = markInfoContainer.write(GsonContainerWriter())
+        applicationContext.openFileOutput(resources.getString(R.string.savedDataFileName), Context.MODE_PRIVATE).use {
+            it.write(serializedContainerData.toByteArray())
         }
     }
 
