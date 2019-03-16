@@ -17,14 +17,15 @@ import ru.itmo.se.mapmarks.adapters.MyElementsViewAdapter
 @SuppressLint("Registered")
 abstract class MyElementsActivity<T : RecyclerView.ViewHolder, B>(private val addSuccessMessage: String) :
     AppCompatActivity() {
-    protected lateinit var currentLocation: LatLng
-
+    protected var currentLocation: LatLng? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_elements)
-        val locationArray = intent.getDoubleArrayExtra("currentLocation")
-        currentLocation = LatLng(locationArray[0], locationArray[1])
+        if (intent.hasExtra("currentLocation")) {
+            val locationArray = intent.getDoubleArrayExtra("currentLocation")
+            currentLocation = LatLng(locationArray[0], locationArray[1])
+        }
 
         myRecyclerView.layoutManager = LinearLayoutManager(this)
         myRecyclerView.adapter = actualAdapter(this)

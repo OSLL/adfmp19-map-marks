@@ -7,7 +7,7 @@ import com.google.android.gms.maps.model.LatLng
 abstract class MyElementsViewAdapter<T : RecyclerView.ViewHolder, R>(
     protected val allElements: List<R>,
     protected val context: Context,
-    protected val currentLocation: LatLng
+    protected val currentLocation: LatLng?
 ) : RecyclerView.Adapter<T>() {
     override fun getItemCount() = allElements.size
 }

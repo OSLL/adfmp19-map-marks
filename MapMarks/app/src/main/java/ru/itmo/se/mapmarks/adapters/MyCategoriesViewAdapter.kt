@@ -14,7 +14,7 @@ import ru.itmo.se.mapmarks.data.category.Category
 import ru.itmo.se.mapmarks.data.storage.SavedMarkInfoContainer
 import ru.itmo.se.mapmarks.myElementsActivity.MyMarksActivity
 
-class MyCategoriesViewAdapter(allElements: List<Category>, context: Context, currentLocation: LatLng) :
+class MyCategoriesViewAdapter(allElements: List<Category>, context: Context, currentLocation: LatLng?) :
     MyElementsViewAdapter<MyCategoriesViewAdapter.MyCategoriesViewHolder, Category>(
         allElements,
         context,
@@ -46,7 +46,9 @@ class MyCategoriesViewAdapter(allElements: List<Category>, context: Context, cur
             view.setOnClickListener { view ->
                 val categoryMarksIntent = Intent(context, MyMarksActivity::class.java)
                 categoryMarksIntent.putExtra("name", categoryNameView.text.toString())
-                    .putExtra("currentLocation", doubleArrayOf(currentLocation.latitude, currentLocation.longitude))
+                currentLocation?.let {
+                    categoryMarksIntent.putExtra("currentLocation", doubleArrayOf(currentLocation.latitude, currentLocation.longitude))
+                }
                 context.startActivity(categoryMarksIntent)
             }
         }

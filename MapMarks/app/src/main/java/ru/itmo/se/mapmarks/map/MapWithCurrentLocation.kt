@@ -14,7 +14,6 @@ import com.google.android.gms.maps.model.LatLng
 import ru.itmo.se.mapmarks.moveToMark
 
 class MapWithCurrentLocation(val backedMap: GoogleMap, val holdingActivity: Activity) : LocationListener {
-    private var currentLocationMarker: Marker? = null
     private var locationManager: LocationManager? = null
     private var cameraMoved: Boolean = false
 
@@ -76,5 +75,9 @@ class MapWithCurrentLocation(val backedMap: GoogleMap, val holdingActivity: Acti
 
     private fun requestPermissions() {
         holdingActivity.requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
+    }
+
+    companion object {
+        private var currentLocationMarker: Marker? = null
     }
 }

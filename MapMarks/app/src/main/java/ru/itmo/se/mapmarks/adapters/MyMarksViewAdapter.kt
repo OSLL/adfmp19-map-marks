@@ -16,7 +16,7 @@ import ru.itmo.se.mapmarks.R
 import ru.itmo.se.mapmarks.data.mark.Mark
 import ru.itmo.se.mapmarks.getDistance
 
-class MyMarksViewAdapter(allElements: List<Mark>,context: Context, currentLocation: LatLng) :
+class MyMarksViewAdapter(allElements: List<Mark>,context: Context, currentLocation: LatLng?) :
     MyElementsViewAdapter<MyMarksViewAdapter.MyMarksViewHolder, Mark>(allElements, context, currentLocation) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyMarksViewHolder {
@@ -34,7 +34,11 @@ class MyMarksViewAdapter(allElements: List<Mark>,context: Context, currentLocati
         holder.markCategoryView.text = context.getString(R.string.my_marks_category_tag) + currentMark.category.name
 
         // TODO real location
-        holder.markLocationDescriptionView.text = "${getDistance(currentLocation, currentMark.getPosition())} км от Вас"
+        holder.markLocationDescriptionView.text = if (currentLocation != null) {
+            "${getDistance(currentLocation, currentMark.getPosition())} км от Вас"
+        } else {
+            "Расстояние неизвестно"
+        }
         holder.view.findViewById<CardView>(R.id.my_marks_card_view).setCardBackgroundColor(currentMark.category.color)
     }
 

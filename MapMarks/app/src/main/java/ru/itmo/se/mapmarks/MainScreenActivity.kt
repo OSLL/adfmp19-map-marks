@@ -145,15 +145,17 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
 
         navView.setNavigationItemSelectedListener { menuItem ->
             menuItem.isChecked = true
-            startActivity(
-                when (menuItem.itemId) {
-                    R.id.mainMyMarksOptionMenu -> Intent(this, MyMarksActivity::class.java)
-                    else -> Intent(this, MyCategoriesActivity::class.java)
-                }.putExtra(
+            val elementsIntent = when (menuItem.itemId) {
+                R.id.mainMyMarksOptionMenu -> Intent(this, MyMarksActivity::class.java)
+                else -> Intent(this, MyCategoriesActivity::class.java)
+            }
+            map.currentLocation?.let {
+                elementsIntent.putExtra(
                     "currentLocation",
-                    doubleArrayOf(map.currentLocation!!.latitude, map.currentLocation!!.longitude)
+                    doubleArrayOf(it.latitude, it.longitude)
                 )
-            )
+            }
+            startActivity(elementsIntent)
             drawerLayout.closeDrawers()
             true
         }
