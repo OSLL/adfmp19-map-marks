@@ -6,7 +6,7 @@ import com.google.android.gms.maps.model.*
 import ru.itmo.se.mapmarks.data.category.Category
 import ru.itmo.se.mapmarks.data.mark.Mark
 
-class PointMark(name: String, description: String, category: Category, private var options: MarkerOptions) :
+class PointMark(name: String, description: String, category: Category, internal var options: MarkerOptions) :
     Mark(name, description, category) {
 
     private var marker: Marker? = null
@@ -29,10 +29,6 @@ class PointMark(name: String, description: String, category: Category, private v
     }
 
     override fun getPosition() = options.position
-
-    fun write(writer: PointMarkDataWriter) {
-        writer.write(this)
-    }
 
     private fun getMarkerIcon(color: Int): BitmapDescriptor {
         val hsv = FloatArray(3)

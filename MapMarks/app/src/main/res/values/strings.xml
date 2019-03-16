@@ -28,4 +28,5 @@
     <string name="mark_info_share_button_text">Поделиться</string>
     <string name="select_position_activity_label">Выбор позиции</string>
     <string name="done">Готово</string>
+    <string name="savedDataFileName">data</string>
 </resources>

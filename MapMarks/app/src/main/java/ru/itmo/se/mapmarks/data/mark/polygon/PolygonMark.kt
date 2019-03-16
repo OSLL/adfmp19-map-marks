@@ -8,7 +8,7 @@ import com.google.android.gms.maps.model.PolygonOptions
 import ru.itmo.se.mapmarks.data.category.Category
 import ru.itmo.se.mapmarks.data.mark.Mark
 
-class PolygonMark(name: String, description: String, category: Category, private var options: PolygonOptions) :
+class PolygonMark(name: String, description: String, category: Category, internal var options: PolygonOptions) :
     Mark(name, description, category) {
 
     private var polygon: Polygon? = null

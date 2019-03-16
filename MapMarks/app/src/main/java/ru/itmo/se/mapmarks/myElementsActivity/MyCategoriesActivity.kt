@@ -8,7 +8,7 @@ import ru.itmo.se.mapmarks.AddMarkButtonOnClickListener
 import ru.itmo.se.mapmarks.adapters.MyCategoriesViewAdapter
 import ru.itmo.se.mapmarks.data.category.Category
 import ru.itmo.se.mapmarks.data.resources.RequestCodes
-import ru.itmo.se.mapmarks.prototype.DummyMarkInfoContainer
+import ru.itmo.se.mapmarks.data.storage.SavedMarkInfoContainer
 
 class MyCategoriesActivity :
     MyElementsActivity<MyCategoriesViewAdapter.MyCategoriesViewHolder, Category>("Категория добавлена") {
@@ -18,5 +18,5 @@ class MyCategoriesActivity :
     }
 
     override fun actualAdapter(context: Context) =
-        MyCategoriesViewAdapter(DummyMarkInfoContainer.INSTANCE.allCategories.toList(), context, currentLocation)
+        MyCategoriesViewAdapter(SavedMarkInfoContainer.INSTANCE.allCategories.toList(), context, currentLocation)
 }

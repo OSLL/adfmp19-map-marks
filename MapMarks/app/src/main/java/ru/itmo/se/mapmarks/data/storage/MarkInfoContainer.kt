@@ -26,4 +26,6 @@ interface MarkInfoContainer {
 
     fun getCategoryByName(categoryName: String): Category
     fun getMarkByName(markName: String): Mark
+
+    fun write(writer: ContainerWriter) = writer.write(this)
 }

@@ -7,13 +7,13 @@ import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
 import android.view.View
 import kotlinx.android.synthetic.main.activity_add_mark.*
-import ru.itmo.se.mapmarks.prototype.DummyMarkInfoContainer
+import ru.itmo.se.mapmarks.data.storage.SavedMarkInfoContainer
 import java.io.IOException
 
 @SuppressLint("Registered")
 abstract class ManipulateElementActivity: AppCompatActivity() {
 
-    protected val markInfoContainer = DummyMarkInfoContainer.INSTANCE
+    protected val markInfoContainer = SavedMarkInfoContainer.INSTANCE
     protected val categoriesList = mutableListOf<String>()
 
     abstract fun propagateToNextActivity(name: String, description: String)
