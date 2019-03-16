@@ -29,6 +29,7 @@ import ru.itmo.se.mapmarks.data.resources.RequestCodes
 import ru.itmo.se.mapmarks.map.MapWithCurrentLocation
 import android.widget.ArrayAdapter
 import com.google.android.gms.maps.CameraUpdateFactory
+import ru.itmo.se.mapmarks.data.mark.share.ShareableMark
 import ru.itmo.se.mapmarks.data.storage.GsonContainerWriter
 import ru.itmo.se.mapmarks.data.storage.MarkInfoContainer
 import ru.itmo.se.mapmarks.data.storage.SavedMarkInfoContainer
@@ -56,15 +57,6 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
 
         addMarkButtonMain.setOnClickListener(AddMarkButtonOnClickListener(this, RequestCodes.MAIN_ADD_MARK))
         (mainScreenMap as SupportMapFragment).getMapAsync(this)
-
-        shareButton.setOnClickListener {
-            val sharingIntent = Intent(Intent.ACTION_SEND)
-            sharingIntent.type = "text/plain"
-            val shareBody = "Share body"
-            sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here")
-            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody)
-            startActivity(Intent.createChooser(sharingIntent, "Share via"));
-        }
     }
 
     override fun onPause() {
@@ -230,6 +222,15 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
             markInfoLocation.text = LocationConverter.convert(mark.getPosition().latitude, mark.getPosition().longitude)
             markInfoDistance.text = "${getDistance(map.currentLocation!!, mark.getPosition())} км от Вас"
             selectMark = mark
+
+            shareButton.setOnClickListener {
+                val sharingIntent = Intent(Intent.ACTION_SEND)
+                sharingIntent.type = "text/plain"
+                val shareBody = ShareableMark(mark).makrShareBody()
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here")
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody)
+                startActivity(Intent.createChooser(sharingIntent, "Поделиться через"));
+            }
         }
 
         fun showPopup() {
