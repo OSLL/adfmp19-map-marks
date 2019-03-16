@@ -14,18 +14,14 @@ class PointMark(name: String, description: String, category: Category, private v
     override fun getBound() = LatLngBounds(options.position, options.position)
 
     override fun addToMap(map: GoogleMap) {
-        if (marker == null) {
-            marker = map.addMarker(options.icon(getMarkerIcon(category.color)))
-        }
+        marker = map.addMarker(options.icon(getMarkerIcon(category.color)))
         marker!!.tag = this
         marker!!.title = name
     }
 
     override fun remove() {
-        if (marker != null) {
-            marker!!.remove()
-            marker = null
-        }
+        marker?.remove()
+        marker = null
     }
 
     override fun getPosition() = options.position

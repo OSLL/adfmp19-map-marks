@@ -24,17 +24,13 @@ class PolygonMark(name: String, description: String, category: Category, private
     }
 
     override fun addToMap(map: GoogleMap) {
-        if (polygon == null) {
-            polygon = map.addPolygon(options.strokeColor(Color.BLACK).fillColor(category.color))
-        }
+        polygon = map.addPolygon(options.strokeColor(Color.BLACK).fillColor(category.color))
         polygon!!.tag = this
     }
 
     override fun remove() {
-        if (polygon != null) {
-            polygon!!.remove()
-            polygon = null
-        }
+        polygon?.remove()
+        polygon = null
     }
 
     override fun getPosition() = getBound().center
