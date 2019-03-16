@@ -56,7 +56,7 @@ abstract class ManipulateMarkActivity : ManipulateElementActivity() {
                     RequestCodes.MARK_ADD_NEW_CATEGORY -> {
                         val newCategoryName = data.getStringExtra("name")
                         categoriesList += newCategoryName
-                        addSelectCategorySpinner.adapter = getActualAdapter(categoriesList)
+                        updateSpinnerAdapterAndListener()
 
                         // Last item in adapter is actually not a category, but an option to start new activity,
                         // so it is needed to subtract 2 to get an appropriate position
@@ -93,6 +93,10 @@ abstract class ManipulateMarkActivity : ManipulateElementActivity() {
         // There is the only assignment to categoriesSpinner
         categoriesList += markInfoContainer.allCategories.map { it.name }
 
+        updateSpinnerAdapterAndListener()
+    }
+
+    private fun updateSpinnerAdapterAndListener() {
         val adapter = getActualAdapter(categoriesList)
         addSelectCategorySpinner.adapter = adapter
 
