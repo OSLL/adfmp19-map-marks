@@ -57,21 +57,6 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
         addMarkButtonMain.setOnClickListener(AddMarkButtonOnClickListener(this, RequestCodes.MAIN_ADD_MARK))
         (mainScreenMap as SupportMapFragment).getMapAsync(this)
 
-        navView.setNavigationItemSelectedListener { menuItem ->
-            menuItem.isChecked = true
-            startActivity(
-                when (menuItem.itemId) {
-                    R.id.mainMyMarksOptionMenu -> Intent(this, MyMarksActivity::class.java)
-                    else -> Intent(this, MyCategoriesActivity::class.java)
-                }.putExtra(
-                    "currentLocation",
-                    doubleArrayOf(map.currentLocation!!.latitude, map.currentLocation!!.longitude)
-                )
-            )
-            drawerLayout.closeDrawers()
-            true
-        }
-
         shareButton.setOnClickListener {
             val sharingIntent = Intent(Intent.ACTION_SEND)
             sharingIntent.type = "text/plain"
@@ -126,7 +111,10 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
             val name = data.getStringExtra("name")
             val newMark = markInfoContainer.getMarkByName(name)
             if (categoryName == null || newMark.category.name == categoryName) {
-                marksAdapter.remove(newMark)
+                if (newMark.attach != null) {
+                    marksAdapter.remove(newMark.attach as Mark)
+                    (newMark.attach as Mark).remove()
+                }
                 marksAdapter.add(newMark)
                 newMark.addToMap(map.backedMap)
             }
@@ -161,6 +149,21 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
             flyToMark(googleMap, mark.getBound())
         } else {
             map.moveCameraToCurrentPosition()
+        }
+
+        navView.setNavigationItemSelectedListener { menuItem ->
+            menuItem.isChecked = true
+            startActivity(
+                when (menuItem.itemId) {
+                    R.id.mainMyMarksOptionMenu -> Intent(this, MyMarksActivity::class.java)
+                    else -> Intent(this, MyCategoriesActivity::class.java)
+                }.putExtra(
+                    "currentLocation",
+                    doubleArrayOf(map.currentLocation!!.latitude, map.currentLocation!!.longitude)
+                )
+            )
+            drawerLayout.closeDrawers()
+            true
         }
     }
 

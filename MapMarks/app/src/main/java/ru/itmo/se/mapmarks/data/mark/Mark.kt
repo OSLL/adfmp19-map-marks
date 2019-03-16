@@ -10,6 +10,8 @@ abstract class Mark(
     var description: String,
     var category: Category
 ) {
+    var attach: Any? = null
+
     abstract fun getPosition(): LatLng
 
     abstract fun addToMap(map: GoogleMap)
