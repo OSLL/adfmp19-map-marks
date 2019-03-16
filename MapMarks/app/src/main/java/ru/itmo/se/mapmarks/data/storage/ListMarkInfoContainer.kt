@@ -1,6 +1,5 @@
 package ru.itmo.se.mapmarks.data.storage
 
-import android.util.Log
 import ru.itmo.se.mapmarks.data.category.Category
 import ru.itmo.se.mapmarks.data.mark.Mark
 import java.io.IOException
@@ -66,6 +65,7 @@ open class ListMarkInfoContainer : MarkInfoContainer {
         val markIndex = marks.indexOf(oldMark)
         val markDoesNotExists = markIndex == -1
         if (!markDoesNotExists) {
+            marks[markIndex].remove()
             marks[markIndex] = newMark
             return true
         }

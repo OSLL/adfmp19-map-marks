@@ -6,15 +6,17 @@ import com.google.android.gms.maps.model.LatLngBounds
 import ru.itmo.se.mapmarks.data.category.Category
 
 abstract class Mark(
-    val name: String,
-    val description: String,
-    val category: Category
+    var name: String,
+    var description: String,
+    var category: Category
 ) {
     abstract fun getPosition(): LatLng
 
     abstract fun addToMap(map: GoogleMap)
 
     abstract fun getBound(): LatLngBounds
+
+    abstract fun remove()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

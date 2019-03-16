@@ -3,12 +3,15 @@ package ru.itmo.se.mapmarks.data.mark.polygon
 import android.graphics.Color
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.Polygon
 import com.google.android.gms.maps.model.PolygonOptions
 import ru.itmo.se.mapmarks.data.category.Category
 import ru.itmo.se.mapmarks.data.mark.Mark
 
-class PolygonMark(name: String, description: String, category: Category, private val options: PolygonOptions) :
+class PolygonMark(name: String, description: String, category: Category, private var options: PolygonOptions) :
     Mark(name, description, category) {
+
+    private var polygon: Polygon? = null
 
     init {
         options.clickable(true)
@@ -21,7 +24,17 @@ class PolygonMark(name: String, description: String, category: Category, private
     }
 
     override fun addToMap(map: GoogleMap) {
-        map.addPolygon(options.strokeColor(Color.BLACK).fillColor(category.color)).tag = this
+        if (polygon == null) {
+            polygon = map.addPolygon(options.strokeColor(Color.BLACK).fillColor(category.color))
+        }
+        polygon!!.tag = this
+    }
+
+    override fun remove() {
+        if (polygon != null) {
+            polygon!!.remove()
+            polygon = null
+        }
     }
 
     override fun getPosition() = getBound().center
