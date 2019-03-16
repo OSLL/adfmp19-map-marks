@@ -30,9 +30,7 @@ class MapWithCurrentLocation(val backedMap: GoogleMap, val holdingActivity: Acti
         val latLng = LatLng(location.latitude, location.longitude)
         currentLocationMarker = backedMap.addMarker(
             MarkerOptions().position(latLng).icon(
-                BitmapDescriptorFactory.defaultMarker(
-                    BitmapDescriptorFactory.HUE_ROSE
-                )
+                BitmapDescriptorFactory.defaultMarker()
             )
         )
         if (cameraMoved) {

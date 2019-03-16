@@ -22,8 +22,8 @@
             <android.support.v7.widget.Toolbar
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    android:background="@color/colorAccent"
-                    android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+                    android:background="@color/colorWhite"
+                    android:theme="@style/ThemeOverlay.AppCompat.Light"
                     android:minHeight="?attr/actionBarSize"
                     android:id="@+id/mainMenuToolbar"
                     android:elevation="4dp"
@@ -45,7 +45,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end|bottom"
                     android:src="@android:drawable/ic_input_add"
-                    android:background="@color/colorAccent"
+                    android:backgroundTint="@color/design_default_color_primary"
                     android:layout_margin="16dp"
             />
             <android.support.design.widget.FloatingActionButton

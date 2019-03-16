@@ -50,7 +50,7 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
         val actionbar: ActionBar? = supportActionBar
         actionbar?.apply {
             setDisplayHomeAsUpEnabled(true)
-            setHomeAsUpIndicator(android.R.drawable.ic_menu_camera)
+            setHomeAsUpIndicator(R.drawable.ic_slide_menu)
         }
 
         initContainer()
