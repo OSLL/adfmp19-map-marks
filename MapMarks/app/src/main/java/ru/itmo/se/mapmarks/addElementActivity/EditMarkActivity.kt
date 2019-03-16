@@ -19,6 +19,16 @@ class EditMarkActivity: ManipulateMarkActivity() {
         addMarkDescription.setText(markToEdit.description)
     }
 
+    override fun doNext() {
+        val name = addMarkName.text.toString()
+        val description = addMarkDescription.text.toString()
+        if (markToEdit.name == name || !markInfoContainer.containsMark(name)) {
+            propagateToNextActivity(name, description)
+        } else {
+            addMarkNameLayout.error = "Метка с таким именем уже существует"
+        }
+    }
+
     override fun createAndAddMark(name: String, description: String, coordinates: ArrayList<LatLng>) {
         val newMark = if (coordinates.size == 1) {
             createMark(name, description, coordinates[0])

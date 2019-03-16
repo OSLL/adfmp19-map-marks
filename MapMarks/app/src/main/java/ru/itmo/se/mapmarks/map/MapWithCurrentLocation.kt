@@ -11,7 +11,7 @@ import android.os.Bundle
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.*
 import com.google.android.gms.maps.model.LatLng
-import ru.itmo.se.mapmarks.flyToMark
+import ru.itmo.se.mapmarks.moveToMark
 
 class MapWithCurrentLocation(val backedMap: GoogleMap, val holdingActivity: Activity) : LocationListener {
     private var currentLocationMarker: Marker? = null
@@ -36,7 +36,7 @@ class MapWithCurrentLocation(val backedMap: GoogleMap, val holdingActivity: Acti
             )
         )
         if (cameraMoved) {
-            flyToMark(backedMap, LatLngBounds(currentLocation, currentLocation))
+            moveToMark(backedMap, currentLocation!!)
             cameraMoved = false
         }
     }

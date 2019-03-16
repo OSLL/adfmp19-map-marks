@@ -48,16 +48,6 @@ abstract class ManipulateMarkActivity : ManipulateElementActivity() {
         startActivityForResult(selectMarkPositionIntent, RequestCodes.MARK_SELECT_POSITION)
     }
 
-    override fun doNext() {
-        val name = addMarkName.text.toString()
-        val description = addMarkDescription.text.toString()
-        if (!markInfoContainer.containsMark(name)) {
-            propagateToNextActivity(name, description)
-        } else {
-            addMarkNameLayout.error = "Метка с таким именем уже существует"
-        }
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (data != null) {

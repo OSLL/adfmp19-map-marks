@@ -5,6 +5,7 @@ import android.content.res.ColorStateList
 import android.view.View
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import java.lang.Math.rint
@@ -17,6 +18,11 @@ fun setViewColor(view: View, color: Int) {
 fun flyToMark(map: GoogleMap, bound: LatLngBounds) {
     val cameraUpdate = CameraUpdateFactory.newLatLngBounds(bound, 10)
     map.animateCamera(cameraUpdate)
+}
+
+fun moveToMark(map: GoogleMap, latLng: LatLng) {
+    val position = CameraPosition.Builder().target(latLng).build()
+    map.moveCamera(CameraUpdateFactory.newLatLngZoom(position.target, 17.0f))
 }
 
 fun getDistance(latLng1: LatLng, latLng2: LatLng): Double {

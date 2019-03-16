@@ -63,6 +63,7 @@ class SelectMarkPositionActivity : AppCompatActivity(), OnMapReadyCallback {
         googleMap.setOnCameraMoveListener(listener)
 
         map = MapWithCurrentLocation(googleMap, this)
+        map.moveCameraToCurrentPosition()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
