@@ -43,9 +43,13 @@ abstract class ManipulateMarkActivity : ManipulateElementActivity() {
     }
 
     override fun propagateToNextActivity(name: String, description: String) {
-        val selectMarkPositionIntent = Intent(this, SelectMarkPositionActivity::class.java)
-        selectMarkPositionIntent.putExtra("name", name).putExtra("description", description)
-        startActivityForResult(selectMarkPositionIntent, RequestCodes.MARK_SELECT_POSITION)
+        if (addSelectCategorySpinner.selectedItemPosition > 0) {
+            val selectMarkPositionIntent = Intent(this, SelectMarkPositionActivity::class.java)
+            selectMarkPositionIntent.putExtra("name", name).putExtra("description", description)
+            startActivityForResult(selectMarkPositionIntent, RequestCodes.MARK_SELECT_POSITION)
+        } else {
+            Toast.makeText(this, "Выберите категорию или создайте новую", Toast.LENGTH_LONG).show()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -83,7 +87,7 @@ abstract class ManipulateMarkActivity : ManipulateElementActivity() {
         val adapter = ArrayAdapter(
             this,
             android.R.layout.simple_spinner_item,
-            list + listOf("Новая категория...")
+            listOf("- Категория -") + list + listOf("Новая категория...")
         )
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         return adapter
@@ -97,12 +101,12 @@ abstract class ManipulateMarkActivity : ManipulateElementActivity() {
     }
 
     private fun updateSpinnerAdapterAndListener() {
-        val adapter = getActualAdapter(categoriesList)
-        addSelectCategorySpinner.adapter = adapter
-
-        val listener = SelectCategorySpinnerListener(this, addSelectCategorySpinner.adapter)
+        val listener = SelectCategorySpinnerListener(this, categoriesList.size)
         addSelectCategorySpinner.setOnTouchListener(listener)
         addSelectCategorySpinner.onItemSelectedListener = listener
+
+        val adapter = getActualAdapter(categoriesList)
+        addSelectCategorySpinner.adapter = adapter
     }
 
     private inner class ManipulateMarkInputVerifier : InputVerifier() {
