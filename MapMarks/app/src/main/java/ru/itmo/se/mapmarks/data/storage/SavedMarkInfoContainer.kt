@@ -4,20 +4,25 @@ import android.content.Context
 import android.util.Log
 import ru.itmo.se.mapmarks.data.mark.point.PointMark
 import ru.itmo.se.mapmarks.data.mark.polygon.PolygonMark
+import java.io.FileNotFoundException
 
 class SavedMarkInfoContainer: ListMarkInfoContainer() {
 
     companion object {
-        private lateinit var data: String
+        private var data: String? = null
 
         fun register(applicationContext: Context, saveFileId: Int) {
-            applicationContext.openFileInput(applicationContext.getString(saveFileId)).use {
-                data = String(it.readBytes())
+            try {
+                applicationContext.openFileInput(applicationContext.getString(saveFileId)).use {
+                    data = String(it.readBytes())
+                }
+            } catch (_: FileNotFoundException) {
+                Log.i("Load from internal storage", "File not found, using empty container")
             }
         }
 
         val INSTANCE: MarkInfoContainer by lazy {
-            val container = MarkInfoContainerFactory.fromString(data)
+            val container = data?.let { MarkInfoContainerFactory.fromString(it) } ?: SavedMarkInfoContainer()
             container.allMarks.forEach {
                 val newMark = when (it) {
                     is PointMark -> PointMark(it.name, it.description, container.getCategoryByName(it.category.name), it.options)
