@@ -64,9 +64,8 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
         saveData()
     }
 
-    override fun onDestroy() {
-        Log.d("DEBUG", "On destroy")
-        super.onDestroy()
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
         saveData()
     }
 
