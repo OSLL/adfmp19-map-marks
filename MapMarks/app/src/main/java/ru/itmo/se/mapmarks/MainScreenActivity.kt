@@ -28,7 +28,6 @@ import android.view.ViewGroup
 import ru.itmo.se.mapmarks.data.resources.RequestCodes
 import ru.itmo.se.mapmarks.map.MapWithCurrentLocation
 import android.widget.ArrayAdapter
-import com.google.android.gms.maps.CameraUpdateFactory
 import ru.itmo.se.mapmarks.data.mark.share.ShareableMark
 import ru.itmo.se.mapmarks.data.storage.GsonContainerWriter
 import ru.itmo.se.mapmarks.data.storage.MarkInfoContainer
@@ -189,7 +188,16 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun initContainer() {
-        SavedMarkInfoContainer.register(applicationContext, R.string.savedDataFileName)
+        val testMod = intent.getBooleanExtra("test", false)
+        if (testMod) {
+            val path = intent.getStringExtra("path")
+            SavedMarkInfoContainer.register(applicationContext, path)
+        } else {
+            SavedMarkInfoContainer.register(
+                applicationContext,
+                applicationContext.getString(R.string.savedDataFileName)
+            )
+        }
         markInfoContainer = SavedMarkInfoContainer.INSTANCE
         markList = markInfoContainer.allMarks.toList()
         initFilter()

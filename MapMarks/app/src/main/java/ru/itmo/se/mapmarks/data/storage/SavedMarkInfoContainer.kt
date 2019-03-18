@@ -11,9 +11,9 @@ class SavedMarkInfoContainer: ListMarkInfoContainer() {
     companion object {
         private var data: String? = null
 
-        fun register(applicationContext: Context, saveFileId: Int) {
+        fun register(applicationContext: Context, path: String) {
             try {
-                applicationContext.openFileInput(applicationContext.getString(saveFileId)).use {
+                applicationContext.openFileInput(path).use {
                     data = String(it.readBytes())
                 }
             } catch (_: FileNotFoundException) {
