@@ -76,7 +76,7 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
         val searchView = menu.findItem(R.id.mainScreenSearch).actionView as SearchView
         val searchAutoComplete =
             searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text) as SearchView.SearchAutoComplete
-        marksAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, markList)
+        marksAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, markList.toMutableList())
         searchAutoComplete.setAdapter(marksAdapter)
         searchAutoComplete.onItemClickListener =
             AdapterView.OnItemClickListener { parent, _, position, _ ->

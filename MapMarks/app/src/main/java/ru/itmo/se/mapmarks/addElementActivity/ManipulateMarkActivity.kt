@@ -22,14 +22,14 @@ abstract class ManipulateMarkActivity : ManipulateElementActivity() {
     protected fun createMark(name: String, description: String, position: LatLng?) = PointMark(
         name,
         description,
-        markInfoContainer.getCategoryByName(categoriesList[addSelectCategorySpinner.selectedItemPosition]),
+        markInfoContainer.getCategoryByName(categoriesList[addSelectCategorySpinner.selectedItemPosition - 1]),
         MarkerOptions().position(position!!)
     )
 
     protected fun createPolygon(name: String, description: String, coordinates: ArrayList<LatLng>) = PolygonMark(
         name,
         description,
-        markInfoContainer.getCategoryByName(categoriesList[addSelectCategorySpinner.selectedItemPosition]),
+        markInfoContainer.getCategoryByName(categoriesList[addSelectCategorySpinner.selectedItemPosition - 1]),
         PolygonOptions().addAll(coordinates)
     )
 
