@@ -35,7 +35,7 @@ class MyMarksViewAdapter(allElements: List<Mark>,context: Context, currentLocati
 
         // TODO real location
         holder.markLocationDescriptionView.text = if (currentLocation != null) {
-            "${getDistance(currentLocation, currentMark.getPosition())} км от Вас"
+            "${getDistance(currentLocation, currentMark.getPosition())} от Вас"
         } else {
             "Расстояние неизвестно"
         }

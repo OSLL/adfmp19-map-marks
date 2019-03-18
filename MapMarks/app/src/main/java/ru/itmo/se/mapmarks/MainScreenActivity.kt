@@ -222,7 +222,7 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
             markCategory.text = mark.category.name
             markInfoDescription.text = mark.description
             markInfoLocation.text = LocationConverter.convert(mark.getPosition().latitude, mark.getPosition().longitude)
-            markInfoDistance.text = "${getDistance(map.currentLocation!!, mark.getPosition())} км от Вас"
+            markInfoDistance.text = "${getDistance(map.currentLocation!!, mark.getPosition())} от Вас"
             selectMark = mark
 
             shareButton.setOnClickListener {
@@ -244,7 +244,8 @@ class MainScreenActivity : AppCompatActivity(), OnMapReadyCallback {
                 EditMarkButtonOnClickListener(
                     this@MainScreenActivity,
                     requestCode = RequestCodes.MAIN_EDIT_MARK,
-                    markNameToEdit = markName.text.toString()
+                    markNameToEdit = markName.text.toString(),
+                    markCoordinates = selectMark.getPosition()
                 )
             )
 

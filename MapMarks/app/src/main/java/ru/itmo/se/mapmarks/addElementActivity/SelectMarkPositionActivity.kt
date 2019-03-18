@@ -5,6 +5,8 @@ import android.content.Intent
 import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
+import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -12,6 +14,7 @@ import com.google.android.gms.maps.model.*
 import kotlinx.android.synthetic.main.activity_select_mark_position.*
 import ru.itmo.se.mapmarks.R
 import ru.itmo.se.mapmarks.map.MapWithCurrentLocation
+import ru.itmo.se.mapmarks.moveToMark
 
 class SelectMarkPositionActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -63,10 +66,24 @@ class SelectMarkPositionActivity : AppCompatActivity(), OnMapReadyCallback {
         googleMap.setOnCameraMoveListener(listener)
 
         map = MapWithCurrentLocation(googleMap, this)
-        map.moveCameraToCurrentPosition()
+        if (intent.hasExtra("coordinates")) {
+            val coordinates = intent.getDoubleArrayExtra("coordinates")
+            moveToMark(map.backedMap, LatLng(coordinates[0], coordinates[1]))
+        } else {
+            map.moveCameraToCurrentPosition()
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         map.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            onBackPressed()
+            return true
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 }

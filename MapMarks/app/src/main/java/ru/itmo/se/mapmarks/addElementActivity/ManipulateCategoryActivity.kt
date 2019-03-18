@@ -5,6 +5,8 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
@@ -66,7 +68,7 @@ abstract class ManipulateCategoryActivity: ManipulateElementActivity() {
     }
 
     companion object {
-        private const val categoryNameIsEmptyErrorMessage = "Название метки не должно быть пустым"
-        private const val categoryDescriptionIsEmptyErrorMessage = "Описание метки не должно быть пустым"
+        private const val categoryNameIsEmptyErrorMessage = "Название категории не должно быть пустым"
+        private const val categoryDescriptionIsEmptyErrorMessage = "Описание категории не должно быть пустым"
     }
 }

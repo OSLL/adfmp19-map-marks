@@ -5,10 +5,10 @@ import android.support.design.widget.TextInputEditText
 import android.support.design.widget.TextInputLayout
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
+import android.view.MenuItem
 import android.view.View
 import kotlinx.android.synthetic.main.activity_add_mark.*
 import ru.itmo.se.mapmarks.data.storage.SavedMarkInfoContainer
-import java.io.IOException
 
 @SuppressLint("Registered")
 abstract class ManipulateElementActivity: AppCompatActivity() {
@@ -43,5 +43,14 @@ abstract class ManipulateElementActivity: AppCompatActivity() {
             textInputLayout.error = if (isInputEmpty) errorMessage else null
             return !isInputEmpty
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            onBackPressed()
+            return true
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 }

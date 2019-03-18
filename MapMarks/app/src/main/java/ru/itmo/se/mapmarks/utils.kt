@@ -25,7 +25,7 @@ fun moveToMark(map: GoogleMap, latLng: LatLng) {
     map.moveCamera(CameraUpdateFactory.newLatLngZoom(position.target, 17.0f))
 }
 
-fun getDistance(latLng1: LatLng, latLng2: LatLng): Double {
+fun getDistance(latLng1: LatLng, latLng2: LatLng): DistanceInfo {
     val lat1 = latLng1.latitude
     val lon1 = latLng1.longitude
     val lat2 = latLng2.latitude
@@ -37,5 +37,14 @@ fun getDistance(latLng1: LatLng, latLng2: LatLng): Double {
             * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2)
             * Math.sin(dLon / 2))
     val c = 2 * Math.asin(Math.sqrt(a))
-    return rint(100.0 * radius * c) / 100.0
+    return DistanceInfo(rint(100.0 * radius * c) / 100.0)
+}
+
+class DistanceInfo(val distance: Double) {
+
+    companion object {
+        private const val distanceThreshold = 10
+    }
+
+    override fun toString(): String = if (distance > distanceThreshold) "$distance км" else "${distance * 1000} м"
 }
