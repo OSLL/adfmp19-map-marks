@@ -19,7 +19,7 @@ class AddMarkActivity : ManipulateMarkActivity() {
         if (!markInfoContainer.containsMark(name)) {
             propagateToNextActivity(name, description)
         } else {
-            addMarkNameLayout.error = "Метка с таким именем уже существует"
+            addMarkNameLayout.error = "Метка с таким названием уже существует"
         }
     }
 }

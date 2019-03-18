@@ -30,7 +30,7 @@ open class ListMarkInfoContainer : MarkInfoContainer {
             categories.add(0, category)
             return true
         }
-        throw IOException("Категория с таким именем уже существует")
+        throw IOException("Категория с таким названием уже существует")
     }
 
     override fun addMark(mark: Mark): Boolean {
@@ -41,7 +41,7 @@ open class ListMarkInfoContainer : MarkInfoContainer {
             marks.add(0, mark)
             return true
         }
-        throw IOException("Метка с таким именем уже существует")
+        throw IOException("Метка с таким названием уже существует")
     }
 
     override fun containsCategory(categoryName: String) = categories.find { it.name == categoryName } != null
@@ -59,7 +59,7 @@ open class ListMarkInfoContainer : MarkInfoContainer {
             categories[categoryIndex] = category
             return true
         }
-        throw IOException("Категория с таким именем уже существует")
+        throw IOException("Категория с таким названием уже существует")
     }
 
     override fun updateMark(oldMark: Mark, newMark: Mark): Boolean {

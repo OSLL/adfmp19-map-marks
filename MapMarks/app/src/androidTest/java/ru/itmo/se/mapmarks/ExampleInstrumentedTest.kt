@@ -1,6 +1,7 @@
 package ru.itmo.se.mapmarks
 
 import android.content.Intent
+import android.support.design.widget.TextInputLayout
 import android.support.test.InstrumentationRegistry.getInstrumentation
 import android.support.test.espresso.Espresso
 import android.support.test.espresso.Espresso.*
@@ -14,11 +15,16 @@ import org.junit.runner.RunWith
 import android.support.test.espresso.action.ViewActions.typeText
 import android.widget.EditText
 import android.support.test.espresso.Espresso.onView
+import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.view.KeyEvent
 import android.support.test.espresso.matcher.ViewMatchers.*
+import android.util.Log
+import android.view.View
 import org.hamcrest.CoreMatchers.*
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
+import org.hamcrest.Description
+import org.hamcrest.TypeSafeMatcher
 import org.junit.*
 
 
@@ -33,33 +39,88 @@ class ExampleInstrumentedTest {
     @get:Rule
     val activityRule = ActivityTestRule(MainScreenActivity::class.java, true, false)
 
-
     @Test
-    fun addMrkAndAutocompleteTest() {
+    fun testAddMarkAndAutocomplete() {
         activityRule.launchActivity(Intent().putExtra("test", true).putExtra("path", "testData"))
         addPoint("newMark", "newCategory")
         findMark("newMark")
     }
 
     @Test
-    fun addPolygonTest() {
+    fun testAddPolygon() {
         activityRule.launchActivity(Intent().putExtra("test", true).putExtra("path", "testData"))
         addPolygon("newMark1", "newCategory1")
     }
 
-
     @Test
-    fun SaveToStorageTest() {
+    fun testSaveToStorage() {
         activityRule.launchActivity(Intent().putExtra("test", true).putExtra("path", "testData"))
         addPoint("newMark2", "newCategory2")
         activityRule.activity.finish()
         activityRule.launchActivity(Intent())
         findMark("newMark2")
+    }
 
+    @Test
+    fun testEmptyMarkInputData() {
+        val markName = "mark1"
+        val categoryName = "category1"
+        activityRule.launchActivity(Intent().putExtra("test", true).putExtra("path", "testData"))
+        addPoint(markName, categoryName)
+        onView(withId(R.id.addMarkButtonMain)).perform(click())
+        onView(withId(R.id.addMarkName)).perform(clearText())
+        Espresso.closeSoftKeyboard()
+
+        onView(withId(R.id.addSelectCategorySpinner)).perform(click())
+        onData(allOf(`is`(instanceOf(String::class.java)), `is`(categoryName))).perform(click())
+        testInputLayoutEmptiness(testMark = true)
+    }
+
+    @Test
+    fun testDuplicateMarkName() {
+        val markName = "mark2"
+        val categoryName = "category2"
+        activityRule.launchActivity(Intent().putExtra("test", true).putExtra("path", "testData"))
+        addPoint(markName, categoryName)
+        onView(withId(R.id.addMarkButtonMain)).perform(click())
+        onView(withId(R.id.addMarkName)).perform(typeText(markName))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.addMarkDescription)).perform(typeText("something"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.addNextButton)).perform(click())
+        onView(withId(R.id.addMarkNameLayout)).check(matches(hasTextInputLayoutErrorText("Метка с таким названием уже существует")))
+    }
+
+    @Test
+    fun testEmptyCategoryInputData() {
+        activityRule.launchActivity(Intent().putExtra("test", true).putExtra("path", "testData"))
+        onView(withId(R.id.addMarkButtonMain)).perform(click())
+        onView(withId(R.id.addMarkName)).perform(clearText())
+        Espresso.closeSoftKeyboard()
+
+        onView(withId(R.id.addSelectCategorySpinner)).perform(click())
+        onData(allOf(`is`(instanceOf(String::class.java)), `is`("Новая категория..."))).perform(click())
+        testInputLayoutEmptiness(testMark = false)
+    }
+
+    @Test
+    fun testDuplicateCategoryName() {
+        val markName = "mark3"
+        val categoryName = "category3"
+        activityRule.launchActivity(Intent().putExtra("test", true).putExtra("path", "testData"))
+        addPoint(markName, categoryName)
+        onView(withId(R.id.addMarkButtonMain)).perform(click())
+        onView(withId(R.id.addSelectCategorySpinner)).perform(click())
+        onData(allOf(`is`(instanceOf(String::class.java)), `is`("Новая категория..."))).perform(click())
+        onView(withId(R.id.addCategoryName)).perform(typeText(categoryName))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.addCategoryDescription)).perform(typeText("something..."))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.addCategoryDoneButton)).perform(click())
+        onView(withId(R.id.addCategoryNameLayout)).check(matches(hasTextInputLayoutErrorText("Категория с таким названием уже существует")))
     }
 
     private fun findMark(mark: String) {
-        openActionBarOverflowOrOptionsMenu(getInstrumentation().context)
         onView(withId(R.id.mainScreenSearch)).perform(click())
         onView(isAssignableFrom(EditText::class.java)).perform(typeText(mark.substring(0, 2)))
         val uiDevice = UiDevice.getInstance(getInstrumentation())
@@ -77,13 +138,17 @@ class ExampleInstrumentedTest {
     private fun addAbstractMark(mark: String, category: String) {
         onView(withId(R.id.addMarkButtonMain)).perform(click())
         onView(withId(R.id.addMarkName)).perform(typeText(mark))
-        onView(withId(R.id.addMarkDescription)).perform(typeText("MarkDescripsion"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.addMarkDescription)).perform(typeText("MarkDescription"))
+        Espresso.closeSoftKeyboard()
         onView(withId(R.id.addSelectCategorySpinner)).perform(click())
         onData(allOf(`is`(instanceOf(String::class.java)), `is`("Новая категория..."))).perform(click())
         onView(withId(R.id.addCategoryName)).perform(typeText(category))
-        onView(withId(R.id.addCategoryDescription)).perform(typeText("CategoryDescripsion"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.addCategoryDescription)).perform(typeText("CategoryDescription"))
         Espresso.closeSoftKeyboard()
         onView(withId(R.id.addCategoryDoneButton)).perform(click())
+        Thread.sleep(500)
         onView(withId(R.id.addNextButton)).perform(click())
     }
 
@@ -102,5 +167,45 @@ class ExampleInstrumentedTest {
         onView(withId(R.id.selectMarkLayout)).perform(swipeLeft())
         onView(withId(R.id.addPointButton)).perform(click())
         onView(withId(R.id.markLocationSelectedButton)).perform(click())
+    }
+
+    private fun testInputLayoutEmptiness(testMark: Boolean) {
+        val nextButton = if (testMark) R.id.addNextButton else R.id.addCategoryDoneButton
+        val addNameLayout = if (testMark) R.id.addMarkNameLayout else R.id.addCategoryNameLayout
+        val addName = if (testMark) R.id.addMarkName else R.id.addCategoryName
+        val emptyNameError = "Название ${if (testMark) "метки" else "категории"} не должно быть пустым"
+        val addDescriptionLayout = if (testMark) R.id.addMarkDescriptionLayout else R.id.addCategoryDescriptionLayout
+        val addDescription = if (testMark) R.id.addMarkDescription else R.id.addCategoryDescription
+        val emptyDescriptionError = "Описание ${if (testMark) "метки" else "категории"} не должно быть пустым"
+
+        onView(withId(nextButton)).perform(click())
+        onView(withId(addNameLayout)).check(matches(hasTextInputLayoutErrorText(emptyNameError)))
+        onView(withId(addDescriptionLayout)).check(matches(hasTextInputLayoutErrorText(emptyDescriptionError)))
+
+        onView(withId(addDescription)).perform(typeText("description"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(nextButton)).perform(click())
+        onView(withId(addNameLayout)).check(matches(hasTextInputLayoutErrorText(emptyNameError)))
+        onView(withId(addDescriptionLayout)).check(matches(not(hasTextInputLayoutErrorText(emptyDescriptionError))))
+
+        onView(withId(addDescription)).perform(clearText())
+        Espresso.closeSoftKeyboard()
+        onView(withId(addName)).perform(typeText("name"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(nextButton)).perform(click())
+        onView(withId(addNameLayout)).check(matches(not(hasTextInputLayoutErrorText(emptyNameError))))
+        onView(withId(addDescriptionLayout)).check(matches(hasTextInputLayoutErrorText(emptyDescriptionError)))
+    }
+
+    private fun hasTextInputLayoutErrorText(expectedErrorText: String) = object : TypeSafeMatcher<View>() {
+        override fun describeTo(description: Description?) {}
+
+        override fun matchesSafely(view: View): Boolean {
+            if (view !is TextInputLayout) {
+                return false
+            }
+            val errorMessage = view.error ?: return false
+            return expectedErrorText == errorMessage
+        }
     }
 }

@@ -47,7 +47,7 @@ abstract class ManipulateCategoryActivity: ManipulateElementActivity() {
         val name = addCategoryName.text.toString()
         val description = addCategoryDescription.text.toString()
         try {
-            propagateToNextActivity(name, description)
+            propagateToNextActivity(name, description )
         } catch (e: IOException) {
             addCategoryNameLayout.error = e.message
         }
