@@ -1,11 +1,9 @@
 package ru.itmo.se.mapmarks.prototype
 
-import android.graphics.Color
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolygonOptions
 import ru.itmo.se.mapmarks.data.category.Category
-import ru.itmo.se.mapmarks.data.mark.Mark
 import ru.itmo.se.mapmarks.data.mark.point.PointMark
 import ru.itmo.se.mapmarks.data.mark.polygon.PolygonMark
 import ru.itmo.se.mapmarks.data.storage.ListMarkInfoContainer
@@ -14,9 +12,9 @@ import kotlin.random.Random
 class DummyMarkInfoContainer: ListMarkInfoContainer() {
     init {
         val categories = mutableListOf(
-            Category("Покемоны", "Pokemon Go", Color.argb(255, 190, 0, 0)),
-            Category("Развлечения", "Типа жизнь", Color.argb(255, 0, 190, 0)),
-            Category("Экономия", "Копим на вишневую семерку", Color.argb(255, 0, 0, 190))
+            Category("Покемоны", "Pokemon Go", 10),
+            Category("Развлечения", "Типа жизнь", 100),
+            Category("Экономия", "Копим на вишневую семерку", 200)
         )
 
         val marks = mutableListOf(
