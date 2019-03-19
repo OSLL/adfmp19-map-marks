@@ -9,7 +9,6 @@ interface MarkInfoContainer {
     val allMarks: Iterable<Mark>
 
     fun getCategoryOfMark(markData: Mark): Category?
-
     fun getMarksForCategory(category: Category): Iterable<Mark>
 
     fun addCategory(category: Category): Boolean
