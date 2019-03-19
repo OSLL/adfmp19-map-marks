@@ -1,18 +1,24 @@
 package ru.itmo.se.mapmarks.data.mark
 
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import ru.itmo.se.mapmarks.data.category.Category
 
-class Mark(
-    val name: String,
-    val description: String,
-    val category: Category,
-    val options: MarkerOptions
+abstract class Mark(
+    var name: String,
+    var description: String,
+    var category: Category
 ) {
-    fun write(writer: MarkDataWriter) {
-        writer.write(this)
-    }
+    var attach: Any? = null
+
+    abstract fun getPosition(): LatLng
+
+    abstract fun addToMap(map: GoogleMap)
+
+    abstract fun getBound(): LatLngBounds
+
+    abstract fun remove()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -28,8 +34,8 @@ class Mark(
     override fun hashCode(): Int {
         return name.hashCode()
     }
-}
 
-fun GoogleMap.addMarker(marker: Mark) {
-    addMarker(marker.options)
+    override fun toString(): String {
+        return name
+    }
 }

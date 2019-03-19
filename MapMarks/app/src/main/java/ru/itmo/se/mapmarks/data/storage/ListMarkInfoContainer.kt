@@ -1,5 +1,6 @@
 package ru.itmo.se.mapmarks.data.storage
 
+import android.util.Log
 import ru.itmo.se.mapmarks.data.category.Category
 import ru.itmo.se.mapmarks.data.mark.Mark
 import java.io.IOException
@@ -16,8 +17,10 @@ open class ListMarkInfoContainer : MarkInfoContainer {
 
     override fun getCategoryOfMark(markData: Mark) = marks.find { it == markData }?.category
 
-    override fun getCategoryByName(categoryName: String): Category {
-        return allCategories.first { it.name == categoryName }
+    override fun getCategoryByName(categoryName: String): Category = allCategories.first { it.name == categoryName }
+
+    override fun getMarkByName(markName: String): Mark {
+        return allMarks.first { it.name == markName }
     }
 
     override fun getMarksForCategory(category: Category): Iterable<Mark> = marks.filter { it.category == category }
@@ -27,7 +30,7 @@ open class ListMarkInfoContainer : MarkInfoContainer {
             categories.add(0, category)
             return true
         }
-        throw IOException("Категория с таким именем уже существует")
+        throw IOException("Категория с таким названием уже существует")
     }
 
     override fun addMark(mark: Mark): Boolean {
@@ -38,7 +41,7 @@ open class ListMarkInfoContainer : MarkInfoContainer {
             marks.add(0, mark)
             return true
         }
-        throw IOException("Метка с таким именем уже существует")
+        throw IOException("Метка с таким названием уже существует")
     }
 
     override fun containsCategory(categoryName: String) = categories.find { it.name == categoryName } != null
@@ -56,16 +59,17 @@ open class ListMarkInfoContainer : MarkInfoContainer {
             categories[categoryIndex] = category
             return true
         }
-        throw IOException("Категория с таким именем уже существует")
+        throw IOException("Категория с таким названием уже существует")
     }
 
-    override fun updateMark(mark: Mark): Boolean {
-        val markIndex = marks.indexOf(mark)
+    override fun updateMark(oldMark: Mark, newMark: Mark): Boolean {
+        val markIndex = marks.indexOf(oldMark)
         val markDoesNotExists = markIndex == -1
         if (!markDoesNotExists) {
-            marks[markIndex] = mark
+            newMark.attach = oldMark
+            marks[markIndex] = newMark
             return true
         }
-        throw IOException("Метка с таким именем уже существует")
+        return false
     }
 }

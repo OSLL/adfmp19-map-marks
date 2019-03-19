@@ -11,20 +11,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
-            android:id="@+id/addNameLayout" android:layout_marginStart="16dp" android:layout_marginEnd="16dp"
+            android:id="@+id/addMarkNameLayout" android:layout_marginStart="16dp" android:layout_marginEnd="16dp"
             android:layout_marginTop="16dp"
             app:errorEnabled="true">
 
         <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/add_mark_name_hint" android:id="@+id/addName"/>
+                android:hint="@string/add_mark_name_hint" android:id="@+id/addMarkName"/>
     </android.support.design.widget.TextInputLayout>
     <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@+id/addNameLayout"
-            android:id="@+id/addDescriptionLayout" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addMarkNameLayout"
+            android:id="@+id/addMarkDescriptionLayout" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="16dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp"
             android:layout_marginTop="16dp"
             app:errorEnabled="true">
@@ -32,23 +32,24 @@
         <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/add_mark_description_hint" android:id="@+id/addDescription"/>
+                android:hint="@string/add_mark_description_hint" android:id="@+id/addMarkDescription"/>
     </android.support.design.widget.TextInputLayout>
     <Spinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:spinnerMode="dialog"
             android:prompt="@string/select_category_spinner_prompt"
-            app:layout_constraintTop_toBottomOf="@+id/addDescriptionLayout"
-            android:id="@+id/addSelectSpinner" app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/addMarkDescriptionLayout"
+            android:id="@+id/addSelectCategorySpinner" app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="16dp"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp" android:layout_marginTop="16dp"/>
     <Button
             android:text="@string/add_mark_next_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/addNextButton" android:layout_marginEnd="16dp"
+            android:background="@drawable/rounded_layout"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addSelectSpinner"
+            app:layout_constraintTop_toBottomOf="@+id/addSelectCategorySpinner"
             app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp"
             app:layout_constraintVertical_bias="1.0"/>
 
