@@ -4,7 +4,7 @@ import android.content.Intent
 import android.support.design.widget.TextInputLayout
 import android.support.test.InstrumentationRegistry.getInstrumentation
 import android.support.test.espresso.Espresso
-import android.support.test.espresso.Espresso.*
+import android.support.test.espresso.Espresso.onData
 import android.support.test.espresso.action.ViewActions.*
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
@@ -67,8 +67,7 @@ class ExampleInstrumentedTest {
         activityRule.launchActivity(Intent().putExtra("test", true).putExtra("path", "testData"))
         addPoint(markName, categoryName)
         onView(withId(R.id.addMarkButtonMain)).perform(click())
-        onView(withId(R.id.addMarkName)).perform(clearText())
-        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.addMarkName)).perform(clearText(), closeSoftKeyboard())
 
         onView(withId(R.id.addSelectCategorySpinner)).perform(click())
         onData(allOf(`is`(instanceOf(String::class.java)), `is`(categoryName))).perform(click())
@@ -82,10 +81,8 @@ class ExampleInstrumentedTest {
         activityRule.launchActivity(Intent().putExtra("test", true).putExtra("path", "testData"))
         addPoint(markName, categoryName)
         onView(withId(R.id.addMarkButtonMain)).perform(click())
-        onView(withId(R.id.addMarkName)).perform(typeText(markName))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.addMarkDescription)).perform(typeText("something"))
-        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.addMarkName)).perform(typeText(markName), closeSoftKeyboard())
+        onView(withId(R.id.addMarkDescription)).perform(typeText("something"), closeSoftKeyboard())
         onView(withId(R.id.addNextButton)).perform(click())
         onView(withId(R.id.addMarkNameLayout)).check(matches(hasTextInputLayoutErrorText("Метка с таким названием уже существует")))
     }
@@ -94,8 +91,7 @@ class ExampleInstrumentedTest {
     fun testEmptyCategoryInputData() {
         activityRule.launchActivity(Intent().putExtra("test", true).putExtra("path", "testData"))
         onView(withId(R.id.addMarkButtonMain)).perform(click())
-        onView(withId(R.id.addMarkName)).perform(clearText())
-        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.addMarkName)).perform(clearText(), closeSoftKeyboard())
 
         onView(withId(R.id.addSelectCategorySpinner)).perform(click())
         onData(allOf(`is`(instanceOf(String::class.java)), `is`("Новая категория..."))).perform(click())
@@ -111,10 +107,8 @@ class ExampleInstrumentedTest {
         onView(withId(R.id.addMarkButtonMain)).perform(click())
         onView(withId(R.id.addSelectCategorySpinner)).perform(click())
         onData(allOf(`is`(instanceOf(String::class.java)), `is`("Новая категория..."))).perform(click())
-        onView(withId(R.id.addCategoryName)).perform(typeText(categoryName))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.addCategoryDescription)).perform(typeText("something..."))
-        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.addCategoryName)).perform(typeText(categoryName), closeSoftKeyboard())
+        onView(withId(R.id.addCategoryDescription)).perform(typeText("something..."), closeSoftKeyboard())
         onView(withId(R.id.addCategoryDoneButton)).perform(click())
         onView(withId(R.id.addCategoryNameLayout)).check(matches(hasTextInputLayoutErrorText("Категория с таким названием уже существует")))
     }
@@ -136,15 +130,11 @@ class ExampleInstrumentedTest {
     private fun addAbstractMark(mark: String, category: String) {
         onView(withId(R.id.addMarkButtonMain)).perform(click())
         onView(withId(R.id.addMarkName)).perform(typeText(mark))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.addMarkDescription)).perform(typeText("MarkDescription"))
-        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.addMarkDescription)).perform(typeText("MarkDescription"), closeSoftKeyboard())
         onView(withId(R.id.addSelectCategorySpinner)).perform(click())
         onData(allOf(`is`(instanceOf(String::class.java)), `is`("Новая категория..."))).perform(click())
-        onView(withId(R.id.addCategoryName)).perform(typeText(category))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.addCategoryDescription)).perform(typeText("CategoryDescription"))
-        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.addCategoryName)).perform(typeText(category), closeSoftKeyboard())
+        onView(withId(R.id.addCategoryDescription)).perform(typeText("CategoryDescription"), closeSoftKeyboard())
         onView(withId(R.id.addCategoryDoneButton)).perform(click())
         onView(withId(R.id.addNextButton)).perform(click())
     }
@@ -179,16 +169,13 @@ class ExampleInstrumentedTest {
         onView(withId(addNameLayout)).check(matches(hasTextInputLayoutErrorText(emptyNameError)))
         onView(withId(addDescriptionLayout)).check(matches(hasTextInputLayoutErrorText(emptyDescriptionError)))
 
-        onView(withId(addDescription)).perform(typeText("description"))
-        Espresso.closeSoftKeyboard()
+        onView(withId(addDescription)).perform(typeText("description"), closeSoftKeyboard())
         onView(withId(nextButton)).perform(click())
         onView(withId(addNameLayout)).check(matches(hasTextInputLayoutErrorText(emptyNameError)))
         onView(withId(addDescriptionLayout)).check(matches(not(hasTextInputLayoutErrorText(emptyDescriptionError))))
 
-        onView(withId(addDescription)).perform(clearText())
-        Espresso.closeSoftKeyboard()
-        onView(withId(addName)).perform(typeText("name"))
-        Espresso.closeSoftKeyboard()
+        onView(withId(addDescription)).perform(clearText(), closeSoftKeyboard())
+        onView(withId(addName)).perform(typeText("name"), closeSoftKeyboard())
         onView(withId(nextButton)).perform(click())
         onView(withId(addNameLayout)).check(matches(not(hasTextInputLayoutErrorText(emptyNameError))))
         onView(withId(addDescriptionLayout)).check(matches(hasTextInputLayoutErrorText(emptyDescriptionError)))
