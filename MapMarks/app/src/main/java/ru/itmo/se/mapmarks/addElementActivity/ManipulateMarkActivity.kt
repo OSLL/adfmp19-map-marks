@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
@@ -114,9 +115,12 @@ abstract class ManipulateMarkActivity : ManipulateElementActivity() {
         val listener = SelectCategorySpinnerListener(this, categoriesList.size)
         addSelectCategorySpinner.setOnTouchListener(listener)
         addSelectCategorySpinner.onItemSelectedListener = listener
-
+        val position = addSelectCategorySpinner.selectedItemPosition
         val adapter = getActualAdapter(categoriesList)
         addSelectCategorySpinner.adapter = adapter
+        if (position < adapter.count - 1) {
+            addSelectCategorySpinner.setSelection(position)
+        }
     }
 
     private inner class ManipulateMarkInputVerifier : InputVerifier() {
@@ -151,6 +155,11 @@ abstract class ManipulateMarkActivity : ManipulateElementActivity() {
                 )
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateSpinnerAdapterAndListener()
     }
 
     companion object {
