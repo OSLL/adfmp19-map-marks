@@ -18,7 +18,6 @@ import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.view.KeyEvent
 import android.support.test.espresso.matcher.ViewMatchers.*
-import android.util.Log
 import android.view.View
 import org.hamcrest.CoreMatchers.*
 import androidx.test.uiautomator.UiDevice
@@ -128,7 +127,6 @@ class ExampleInstrumentedTest {
         val symb = mark[2]
         val keyCode = if (symb.isDigit()) symb.toInt() - 23 else symb.toInt() - 68
         uiDevice.pressKeyCode(keyCode)
-        Thread.sleep(500)
         uiDevice.pressKeyCode(KeyEvent.KEYCODE_PAGE_DOWN)
         uiDevice.pressEnter()
         val mMarker1 = uiDevice.findObject(UiSelector().descriptionContains(mark))
@@ -148,13 +146,12 @@ class ExampleInstrumentedTest {
         onView(withId(R.id.addCategoryDescription)).perform(typeText("CategoryDescription"))
         Espresso.closeSoftKeyboard()
         onView(withId(R.id.addCategoryDoneButton)).perform(click())
-        Thread.sleep(500)
         onView(withId(R.id.addNextButton)).perform(click())
     }
 
     private fun addPoint(mark: String, category: String) {
         addAbstractMark(mark, category)
-        onView(withId(R.id.selectMarkLayout)).perform(swipeLeft()).perform(swipeLeft()).perform(swipeDown())
+        onView(withId(R.id.selectMarkLayout)).perform(swipeLeft(), swipeLeft(), swipeDown())
         onView(withId(R.id.markLocationSelectedButton)).perform(click())
     }
 
